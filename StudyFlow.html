@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Flow | Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light Mode Variables */
+            --primary: #dc2626; /* Red-600 */
+            --primary-glow: rgba(220, 38, 38, 0.3);
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 260px;
+            --glass-border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode {
+            /* Dark Mode Variables (Pure Black) */
+            --bg: #000000;
+            --card-bg: #0a0a0a; /* Just off-black for visibility */
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e1e1e;
+            --glass-border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            border-right: var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+        .logo i { color: var(--primary); }
+
+        nav button {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        nav button:hover { background: rgba(220, 38, 38, 0.05); color: var(--primary); }
+        nav button.active { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h1 { font-weight: 800; font-size: 2rem; letter-spacing: -1px; }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .btn-primary:hover { background: #b91c1c; color: white; transform: translateY(-1px); }
+
+        /* --- CARDS & GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 24px; }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            border: var(--glass-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card { display: flex; align-items: center; gap: 20px; }
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .stat-val { font-size: 1.8rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- LISTS --- */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .list-header h3 { font-weight: 700; font-size: 1.1rem; }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item:hover { background: rgba(255,255,255,0.03); }
+
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-red { background: rgba(220, 38, 38, 0.1); color: var(--primary); }
+        .badge-gray { background: rgba(100, 116, 139, 0.1); color: var(--text-muted); }
+
+        /* --- ATTENDANCE BAR --- */
+        .progress-container { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 12px; }
+        .progress-bar { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.5s ease; }
+
+        /* --- FORMS --- */
+        input, select {
+            width: 100%; padding: 12px; margin: 8px 0 20px;
+            border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text);
+            font-family: inherit;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+
+        /* --- CALENDAR --- */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .cal-head { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); padding-bottom: 10px; }
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600;
+            border: 1px solid transparent;
+            position: relative;
+        }
+        .cal-day:hover { background: var(--border); }
+        .cal-day.today { border-color: var(--primary); color: var(--primary); }
+        .has-event {
+            width: 6px; height: 6px; background: var(--primary);
+            border-radius: 50%; margin-top: 4px;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 100; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal.open { display: flex; opacity: 1; }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 32px;
+            border-radius: 24px;
+            width: 450px;
+            max-width: 90%;
+            border: var(--glass-border);
+            transform: scale(0.95); transition: transform 0.3s;
+        }
+        .modal.open .modal-content { transform: scale(1); }
+
+        /* --- UTILS --- */
+        .hidden { display: none; }
+        .text-red { color: var(--primary); }
+        .text-green { color: #10b981; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            aside { width: 100%; height: auto; border-right: none; border-bottom: var(--border); padding: 16px; }
+            nav { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 4px; }
+            nav button { width: auto; white-space: nowrap; margin: 0; }
+            .logo { display: none; }
+            main { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<aside>
+    <div class="logo">
+        <i class="fas fa-layer-group"></i> Study Flow
+    </div>
+    <nav>
+        <button onclick="showTab('dashboard')" class="active" id="nav-dashboard">
+            <i class="fas fa-home"></i> Dashboard
+        </button>
+        <button onclick="showTab('tasks')" id="nav-tasks">
+            <i class="fas fa-check-square"></i> Assignments
+        </button>
+        <button onclick="showTab('attendance')" id="nav-attendance">
+            <i class="fas fa-chart-pie"></i> Attendance
+        </button>
+        <button onclick="showTab('routine')" id="nav-routine">
+            <i class="fas fa-clock"></i> Routine
+        </button>
+        <button onclick="showTab('calendar')" id="nav-calendar">
+            <i class="fas fa-calendar-alt"></i> Calendar
+        </button>
+        <button onclick="showTab('settings')" id="nav-settings">
+            <i class="fas fa-cog"></i> Settings
+        </button>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <h1 id="page-title">Dashboard</h1>
+        <button onclick="toggleTheme()" class="btn">
+            <i class="fas fa-moon"></i> Toggle Theme
+        </button>
+    </header>
+
+    <div id="dashboard" class="tab-content animate-fade">
+        <div class="grid">
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-pending">0</div>
+                    <div class="stat-label">Pending Tasks</div>
+                </div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-attendance">0%</div>
+                    <div class="stat-label">Avg. Attendance</div>
+                </div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-classes">0</div>
+                    <div class="stat-label">Classes Today</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-hourglass-half text-red"></i> Upcoming Deadlines</h3>
+                </div>
+                <div id="dash-deadline-list"></div>
+            </div>
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-stopwatch text-red"></i> Today's Schedule</h3>
+                </div>
+                <div id="dash-schedule-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tasks" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>My Assignments & Tasks</h3>
+                <button onclick="openModal('taskModal')" class="btn btn-primary"><i class="fas fa-plus"></i> New Task</button>
+            </div>
+            <div id="tasks-list"></div>
+        </div>
+    </div>
+
+    <div id="attendance" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>Subject Attendance Tracker</h3>
+                <button onclick="openModal('subjectModal')" class="btn btn-primary"><i class="fas fa-plus"></i> Add Subject</button>
+            </div>
+            <div class="grid" id="attendance-list"></div>
+        </div>
+    </div>
+
+    <div id="routine" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>Weekly Routine</h3>
+                <button onclick="openModal('routineModal')" class="btn btn-primary"><i class="fas fa-plus"></i> Add Session</button>
+            </div>
+            <div id="routine-list"></div>
+        </div>
+    </div>
+
+    <div id="calendar" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3 id="calendar-month-year">Month Year</h3>
+            </div>
+            <div class="calendar-grid">
+                <div class="cal-head">SUN</div><div class="cal-head">MON</div><div class="cal-head">TUE</div>
+                <div class="cal-head">WED</div><div class="cal-head">THU</div><div class="cal-head">FRI</div><div class="cal-head">SAT</div>
+            </div>
+            <div id="calendar-body" class="calendar-grid"></div>
+        </div>
+    </div>
+
+    <div id="settings" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header"><h3>Data Synchronization</h3></div>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Backup your data to a file or restore it on another device.</p>
+            
+            <div style="display:flex; gap:10px;">
+                <button onclick="exportData()" class="btn btn-primary"><i class="fas fa-download"></i> Export Data</button>
+                <label class="btn">
+                    <i class="fas fa-upload"></i> Import Data
+                    <input type="file" id="importFile" onchange="importData(this)" hidden>
+                </label>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="list-header"><h3>Notifications</h3></div>
+            <button onclick="requestNotificationPermission()" class="btn"><i class="fas fa-bell"></i> Enable Browser Alerts</button>
+        </div>
+        <br>
+        <div class="card" style="border-color: rgba(220,38,38,0.5);">
+            <div class="list-header"><h3 class="text-red">Danger Zone</h3></div>
+            <button onclick="clearData()" class="btn" style="border-color:var(--primary); color:var(--primary)"><i class="fas fa-trash"></i> Reset All Data</button>
+        </div>
+    </div>
+
+</main>
+
+<div id="taskModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Task</h3></div>
+        <input type="text" id="taskTitle" placeholder="Task Title (e.g., Math Assignment)">
+        <select id="taskType">
+            <option value="Assignment">Assignment</option>
+            <option value="Quiz">Test/Quiz</option>
+            <option value="Task">General Task</option>
+        </select>
+        <input type="date" id="taskDate">
+        <div style="margin-bottom:15px">
+            <label style="font-size:0.9rem; color:var(--text-muted)">Attach File (Simulated)</label>
+            <input type="file" id="taskFile" style="margin-top:5px">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('taskModal')" class="btn">Cancel</button>
+            <button onclick="addTask()" class="btn btn-primary">Save Task</button>
+        </div>
+    </div>
+</div>
+
+<div id="subjectModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Subject</h3></div>
+        <input type="text" id="subjectName" placeholder="Subject Name (e.g., Physics)">
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('subjectModal')" class="btn">Cancel</button>
+            <button onclick="addSubject()" class="btn btn-primary">Save Subject</button>
+        </div>
+    </div>
+</div>
+
+<div id="routineModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Routine Item</h3></div>
+        <select id="routineDay">
+            <option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option>
+            <option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option>
+        </select>
+        <input type="time" id="routineTime">
+        <input type="text" id="routineName" placeholder="Class Name or Activity">
+        <select id="routineType">
+            <option value="Class">Class</option>
+            <option value="Self-Study">Self-Study</option>
+        </select>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('routineModal')" class="btn">Cancel</button>
+            <button onclick="addRoutine()" class="btn btn-primary">Save Routine</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- LOGIC PRESERVED FROM PREVIOUS VERSION --- */
+    
+    // State
+    const defaultData = {
+        tasks: [],
+        subjects: [],
+        routine: [],
+        settings: { darkMode: true } // Default to dark per request
+    };
+
+    let appData = JSON.parse(localStorage.getItem('studyFlowData')) || defaultData;
+
+    // Initialization
+    function init() {
+        // Force update on load
+        if(appData.settings.darkMode) document.body.classList.add('dark-mode');
+        renderAll();
+        checkReminders();
+    }
+
+    function saveData() {
+        localStorage.setItem('studyFlowData', JSON.stringify(appData));
+        renderAll();
+    }
+
+    function renderAll() {
+        renderDashboard();
+        renderTasks();
+        renderAttendance();
+        renderRoutine();
+        renderCalendar();
+    }
+
+    // --- NAVIGATION ---
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+        
+        // Update Title
+        const titles = {
+            'dashboard': 'Dashboard', 'tasks': 'Assignments', 'attendance': 'Attendance',
+            'routine': 'Routine', 'calendar': 'Calendar', 'settings': 'Settings'
+        };
+        document.getElementById('page-title').innerText = titles[tabId];
+
+        // Update Nav
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('nav-' + tabId).classList.add('active');
+        
+        if (tabId === 'calendar') renderCalendar();
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        appData.settings.darkMode = document.body.classList.contains('dark-mode');
+        saveData();
+    }
+
+    // --- DASHBOARD RENDER ---
+    function renderDashboard() {
+        // Stats
+        const pending = appData.tasks.filter(t => !t.completed).length;
+        document.getElementById('dash-pending').innerText = pending;
+
+        let totalClasses = 0, attendedClasses = 0;
+        appData.subjects.forEach(s => { totalClasses += s.total; attendedClasses += s.present; });
+        const attPct = totalClasses === 0 ? 100 : Math.round((attendedClasses/totalClasses)*100);
+        document.getElementById('dash-attendance').innerText = attPct + "%";
+        document.getElementById('dash-attendance').style.color = attPct < 75 ? 'var(--primary)' : '#10b981';
+
+        // Routine Count
+        const todayDay = new Date().getDay();
+        const todayRoutine = appData.routine.filter(r => parseInt(r.day) === todayDay);
+        document.getElementById('dash-classes').innerText = todayRoutine.length;
+
+        // Schedule List
+        const schedList = document.getElementById('dash-schedule-list');
+        schedList.innerHTML = '';
+        if(todayRoutine.length === 0) schedList.innerHTML = '<div style="padding:15px; opacity:0.6;">No classes today.</div>';
+        
+        todayRoutine.sort((a,b) => a.time.localeCompare(b.time)).forEach(r => {
+            schedList.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <div style="font-weight:700">${r.name}</div>
+                        <div style="font-size:0.8rem; opacity:0.7">${r.time} • ${r.type}</div>
+                    </div>
+                    <span class="badge badge-gray"><i class="fas fa-chevron-right"></i></span>
+                </div>`;
+        });
+
+        // Deadline List
+        const deadList = document.getElementById('dash-deadline-list');
+        deadList.innerHTML = '';
+        const deadlines = appData.tasks.filter(t => !t.completed)
+            .sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
+            
+        if(deadlines.length === 0) deadList.innerHTML = '<div style="padding:15px; opacity:0.6;">No upcoming deadlines.</div>';
+        
+        deadlines.forEach(t => {
+            deadList.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <div style="font-weight:600">${t.title}</div>
+                        <div style="font-size:0.8rem; color:var(--primary); font-weight:700">Due: ${t.date}</div>
+                    </div>
+                    <span class="badge badge-red">${t.type}</span>
+                </div>`;
+        });
+    }
+
+    // --- TASKS ---
+    function renderTasks() {
+        const list = document.getElementById('tasks-list');
+        list.innerHTML = '';
+        appData.tasks.forEach((t, index) => {
+            list.innerHTML += `
+                <div class="list-item" style="opacity: ${t.completed ? 0.5 : 1}">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div onclick="toggleTask(${index})" style="cursor:pointer; width:20px; height:20px; border:2px solid var(--border); border-radius:6px; background:${t.completed ? 'var(--primary)' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
+                            ${t.completed ? '<i class="fas fa-check" style="color:white; font-size:10px"></i>' : ''}
+                        </div>
+                        <div>
+                            <div style="font-weight:700; ${t.completed ? 'text-decoration:line-through' : ''}">${t.title}</div>
+                            <div style="font-size:0.8rem; opacity:0.7">
+                                ${t.type} • ${t.date} 
+                                ${t.file ? `• <i class="fas fa-paperclip"></i> ${t.file}` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${index})" class="btn" style="padding:5px 10px; border:none; color:var(--text-muted)"><i class="fas fa-trash"></i></button>
+                </div>`;
+        });
+    }
+
+    function addTask() {
+        const title = document.getElementById('taskTitle').value;
+        const type = document.getElementById('taskType').value;
+        const date = document.getElementById('taskDate').value;
+        const fileInput = document.getElementById('taskFile');
+        const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+        if(!title || !date) return alert('Please enter title and date');
+        appData.tasks.push({ title, type, date, file: fileName, completed: false });
+        closeModal('taskModal'); saveData();
+        
+        // Reset inputs
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDate').value = '';
+    }
+    
+    function toggleTask(i) { appData.tasks[i].completed = !appData.tasks[i].completed; saveData(); }
+    function deleteTask(i) { if(confirm('Delete task?')) { appData.tasks.splice(i, 1); saveData(); } }
+
+    // --- ATTENDANCE ---
+    function renderAttendance() {
+        const list = document.getElementById('attendance-list');
+        list.innerHTML = '';
+        appData.subjects.forEach((s, index) => {
+            const pct = s.total === 0 ? 100 : Math.round((s.present / s.total) * 100);
+            const color = pct < 75 ? 'var(--primary)' : '#10b981';
+            
+            list.innerHTML += `
+                <div class="card" style="padding:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-size:1.1rem">${s.name}</h3>
+                        <span style="font-weight:800; font-size:1.2rem; color:${color}">${pct}%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width:${pct}%; background-color:${color}"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:0.9rem; color:var(--text-muted)">
+                        <span>Present: <b>${s.present}</b></span>
+                        <span>Total: <b>${s.total}</b></span>
+                    </div>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="markAtt(${index}, 1)" class="btn" style="flex:1; border-color:#10b981; color:#10b981"><i class="fas fa-check"></i></button>
+                        <button onclick="markAtt(${index}, 0)" class="btn" style="flex:1; border-color:var(--primary); color:var(--primary)"><i class="fas fa-times"></i></button>
+                        <button onclick="delSub(${index})" class="btn" style="opacity:0.5"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function addSubject() {
+        const name = document.getElementById('subjectName').value;
+        if(!name) return;
+        appData.subjects.push({ name, present: 0, total: 0 });
+        closeModal('subjectModal'); saveData();
+        document.getElementById('subjectName').value = '';
+    }
+
+    function markAtt(i, p) { appData.subjects[i].total++; if(p) appData.subjects[i].present++; saveData(); }
+    function delSub(i) { if(confirm('Delete subject?')) { appData.subjects.splice(i, 1); saveData(); } }
+
+    // --- ROUTINE ---
+    function renderRoutine() {
+        const list = document.getElementById('routine-list');
+        list.innerHTML = '';
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        for(let i=0; i<7; i++) {
+            const dayRoutine = appData.routine.filter(r => parseInt(r.day) === i).sort((a,b) => a.time.localeCompare(b.time));
+            if(dayRoutine.length > 0) {
+                let html = `<div style="margin-top:20px; margin-bottom:10px; font-weight:700; color:var(--primary); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px;">${days[i]}</div>`;
+                dayRoutine.forEach((r) => {
+                    html += `
+                        <div class="list-item">
+                            <div><b style="font-family:monospace; font-size:1rem; margin-right:10px;">${r.time}</b> ${r.name}</div>
+                            <button onclick="delRoutine('${r.name}', ${r.day}, '${r.time}')" class="btn" style="padding:4px 8px; font-size:0.7rem;"><i class="fas fa-times"></i></button>
+                        </div>`;
+                });
+                list.innerHTML += html;
+            }
+        }
+    }
+
+    function addRoutine() {
+        const day = document.getElementById('routineDay').value;
+        const time = document.getElementById('routineTime').value;
+        const name = document.getElementById('routineName').value;
+        const type = document.getElementById('routineType').value;
+        if(!name || !time) return;
+        appData.routine.push({ day, time, name, type });
+        closeModal('routineModal'); saveData();
+        document.getElementById('routineName').value = '';
+    }
+
+    function delRoutine(n, d, t) {
+        appData.routine = appData.routine.filter(r => !(r.name === n && parseInt(r.day) === d && r.time === t));
+        saveData();
+    }
+
+    // --- CALENDAR ---
+    function renderCalendar() {
+        const now = new Date();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('calendar-month-year').innerText = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+        
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const grid = document.getElementById('calendar-body');
+        grid.innerHTML = '';
+
+        for(let i=0; i<firstDay; i++) grid.innerHTML += `<div></div>`;
+
+        for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const hasTask = appData.tasks.some(t => t.date === dateStr);
+            const isToday = d === now.getDate();
+            
+            grid.innerHTML += `
+                <div class="cal-day ${isToday ? 'today' : ''}">
+                    ${d}
+                    ${hasTask ? '<div class="has-event"></div>' : ''}
+                </div>`;
+        }
+    }
+
+    // --- UTILS ---
+    function openModal(id) { 
+        document.getElementById(id).classList.add('open'); 
+        document.getElementById(id).style.display = 'flex';
+        setTimeout(() => document.getElementById(id).style.opacity = '1', 10);
+    }
+    function closeModal(id) { 
+        document.getElementById(id).style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById(id).classList.remove('open');
+            document.getElementById(id).style.display = 'none';
+        }, 300);
+    }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "study_flow_backup.json");
+        document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+    }
+
+    function importData(input) {
+        const file = input.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                appData = JSON.parse(e.target.result);
+                saveData();
+                alert('Data restored!'); location.reload();
+            } catch(e) { alert('Invalid file'); }
+        };
+        reader.readAsText(file);
+    }
+
+    function clearData() {
+        if(confirm("Are you sure? This cannot be undone.")) {
+            localStorage.removeItem('studyFlowData'); location.reload();
+        }
+    }
+
+    function requestNotificationPermission() {
+        if (!("Notification" in window)) alert("Browser does not support notifications");
+        else Notification.requestPermission().then(p => { if(p==="granted") new Notification("Notifications Enabled!"); });
+    }
+
+    function checkReminders() {
+        if (Notification.permission === "granted") {
+            const today = new Date().toISOString().split('T')[0];
+            const dueTasks = appData.tasks.filter(t => t.date === today && !t.completed);
+            if(dueTasks.length > 0) new Notification("Study Flow", { body: `You have ${dueTasks.length} deadlines today!` });
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
