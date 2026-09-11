@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Flow | Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-glow: rgba(220, 38, 38, 0.3);
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 260px;
+            --glass-border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode {
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e1e1e;
+            --glass-border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        aside {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            border-right: var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo i { color: var(--primary); }
+
+        nav button {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        nav button:hover { background: rgba(220, 38, 38, 0.05); color: var(--primary); }
+        nav button.active { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h1 { font-weight: 800; font-size: 2rem; letter-spacing: -1px; }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        
+        .btn-primary:hover { background: #b91c1c; color: white; transform: translateY(-1px); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 24px; }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            border: var(--glass-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card { display: flex; align-items: center; gap: 20px; }
+        
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .stat-val { font-size: 1.8rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .list-header h3 { font-weight: 700; font-size: 1.1rem; }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+        
+        .list-item:last-child { border-bottom: none; }
+        .list-item:hover { background: rgba(255,255,255,0.03); }
+
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; border: none; cursor: pointer; }
+        .badge-red { background: rgba(220, 38, 38, 0.1); color: var(--primary); }
+        .badge-gray { background: rgba(100, 116, 139, 0.1); color: var(--text-muted); }
+
+        .progress-container { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 12px; }
+        .progress-bar { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.5s ease; }
+
+        input, select {
+            width: 100%; padding: 12px; margin: 8px 0 20px;
+            border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text);
+            font-family: inherit;
+        }
+        
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .cal-head { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); padding-bottom: 10px; }
+        
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600;
+            border: 1px solid transparent;
+            position: relative;
+        }
+        
+        .cal-day:hover { background: var(--border); }
+        .cal-day.today { border-color: var(--primary); color: var(--primary); }
+        
+        .has-event {
+            width: 6px; height: 6px; background: var(--primary);
+            border-radius: 50%; margin-top: 4px;
+        }
+
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 100; opacity: 0; transition: opacity 0.3s;
+        }
+        
+        .modal.open { display: flex; opacity: 1; }
+        
+        .modal-content {
+            background: var(--card-bg);
+            padding: 32px;
+            border-radius: 24px;
+            width: 450px;
+            max-width: 90%;
+            border: var(--glass-border);
+            transform: scale(0.95); transition: transform 0.3s;
+        }
+        
+        .modal.open .modal-content { transform: scale(1); }
+
+        .hidden { display: none !important; }
+        .text-red { color: var(--primary); }
+        .text-green { color: #10b981; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            aside { width: 100%; height: auto; border-right: none; border-bottom: var(--border); padding: 16px; }
+            nav { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 4px; }
+            nav button { width: auto; white-space: nowrap; margin: 0; }
+            .logo { display: none; }
+            main { padding: 20px; }
+        }
+		
+        .timetable-wrapper { overflow-x: auto; padding-bottom: 10px; }
+        .timetable { min-width: 700px; display: grid; grid-template-columns: 50px repeat(7, 1fr); grid-template-rows: 40px repeat(11, 90px); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; }
+        .timetable > div { background: var(--card-bg); }
+        .tt-head { display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: var(--text-muted); }
+        .tt-time { padding: 5px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-align: right; }
+        .tt-cell { position: relative; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 2px; gap: 2px; cursor: pointer; transition: background 0.2s; }
+        .tt-cell:hover { background: rgba(0,0,0,0.03); }
+        
+        .tt-event { border-radius: 6px; padding: 6px; font-size: 0.75rem; font-weight: 600; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 100%; width: 100%; cursor: default; }
+        .tt-event span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tt-event .del-btn { background: transparent; border: none; cursor: pointer; font-size: 0.7rem; opacity: 0.8; align-self: flex-end; margin-left: 5px; color: inherit; }
+        .tt-event .del-btn:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<aside>
+    <div class="logo">
+        <i class="fas fa-layer-group"></i> Study Flow
+    </div>
+    <nav>
+        <button onclick="showTab('dashboard')" class="active" id="nav-dashboard">
+            <i class="fas fa-home"></i> Dashboard
+        </button>
+        <button onclick="showTab('tasks')" id="nav-tasks">
+            <i class="fas fa-check-square"></i> Assignments
+        </button>
+        <button onclick="showTab('courses')" id="nav-courses">
+            <i class="fas fa-book"></i> Courses
+        </button>
+        <button onclick="showTab('attendance')" id="nav-attendance">
+            <i class="fas fa-chart-pie"></i> Attendance
+        </button>
+        <button onclick="showTab('routine')" id="nav-routine">
+            <i class="fas fa-clock"></i> Routine
+        </button>
+        <button onclick="showTab('calendar')" id="nav-calendar">
+            <i class="fas fa-calendar-alt"></i> Calendar
+        </button>
+        <button onclick="showTab('timer')" id="nav-timer">
+            <i class="fas fa-stopwatch"></i> Focus Timer
+        </button>
+        <button onclick="showTab('settings')" id="nav-settings">
+            <i class="fas fa-cog"></i> Settings
+        </button>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <h1 id="page-title">Dashboard</h1>
+        <button onclick="toggleTheme()" class="btn">
+            <i class="fas fa-moon"></i> Toggle Theme
+        </button>
+    </header>
+
+    <div id="dashboard" class="tab-content animate-fade">
+        <div class="grid">
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-pending">0</div>
+                    <div class="stat-label">Pending Tasks</div>
+                </div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-attendance">0%</div>
+                    <div class="stat-label">Avg. Attendance</div>
+                </div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                <div>
+                    <div class="stat-val" id="dash-classes">0</div>
+                    <div class="stat-label">Classes Today</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-hourglass-half text-red"></i> Upcoming Deadlines</h3>
+                </div>
+                <div id="dash-deadline-list"></div>
+            </div>
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-stopwatch text-red"></i> Today's Schedule</h3>
+                </div>
+                <div id="dash-schedule-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tasks" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>My Assignments & Tasks</h3>
+                <button onclick="openModal('taskModal')" class="btn btn-primary"><i class="fas fa-plus"></i> New Task</button>
+            </div>
+            <div id="tasks-list"></div>
+        </div>
+    </div>
+
+    <div id="courses" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>My Courses</h3>
+                <button onclick="openModal('subjectModal')" class="btn btn-primary"><i class="fas fa-plus"></i> Add Course</button>
+            </div>
+            <div class="grid" id="courses-list"></div>
+        </div>
+    </div>
+
+    <div id="attendance" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>Subject Attendance Tracker</h3>
+            </div>
+            <div class="grid" id="attendance-list"></div>
+        </div>
+    </div>
+
+    <div id="routine" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3>Weekly Routine</h3>
+                <button onclick="openRoutineModal()" class="btn btn-primary"><i class="fas fa-plus"></i> Add Session</button>
+            </div>
+            <div class="timetable-wrapper">
+                <div id="routine-timetable" class="timetable"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendar" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header">
+                <h3 id="calendar-month-year">Month Year</h3>
+            </div>
+            <div class="calendar-grid">
+                <div class="cal-head">SUN</div><div class="cal-head">MON</div><div class="cal-head">TUE</div>
+                <div class="cal-head">WED</div><div class="cal-head">THU</div><div class="cal-head">FRI</div><div class="cal-head">SAT</div>
+            </div>
+            <div id="calendar-body" class="calendar-grid"></div>
+        </div>
+    </div>
+
+    <div id="timer" class="tab-content hidden">
+        <div class="card" style="text-align: center; padding: 60px 20px;">
+            <div style="display:flex; justify-content:center; gap:10px; margin-bottom:30px; align-items:center; flex-wrap: wrap;">
+                <button onclick="setTimer(25)" class="badge badge-gray" style="padding: 8px 16px;">Pomodoro (25m)</button>
+                <button onclick="setTimer(5)" class="badge badge-gray" style="padding: 8px 16px;">Short Break (5m)</button>
+                <button onclick="setTimer(15)" class="badge badge-gray" style="padding: 8px 16px;">Long Break (15m)</button>
+                
+                <div style="display:flex; align-items:center; gap: 5px; margin-left: 10px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border);">
+                    <input type="number" id="customTime" placeholder="Min" style="width: 60px; padding: 4px 8px; margin: 0; min-height: 0; border: none; background: transparent; color: var(--text); font-weight: 600;" min="1">
+                    <button onclick="setCustomTimer()" class="badge badge-gray" style="padding: 6px 12px; margin:0;">Set Custom</button>
+                </div>
+            </div>
+            
+            <div id="timer-display" style="font-size: 6rem; font-weight: 800; font-family: monospace; color: var(--primary); letter-spacing: -2px;">
+                25:00
+            </div>
+            
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:40px;">
+                <button onclick="startTimer()" class="btn btn-primary" style="padding: 12px 30px;"><i class="fas fa-play"></i> Start</button>
+                <button onclick="pauseTimer()" class="btn" style="padding: 12px 30px;"><i class="fas fa-pause"></i> Pause</button>
+                <button onclick="resetTimer()" class="btn" style="padding: 12px 30px;"><i class="fas fa-redo"></i> Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings" class="tab-content hidden">
+        <div class="card">
+            <div class="list-header"><h3><i class="fas fa-cloud text-red"></i> Cross-Platform Sync</h3></div>
+            <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.95rem;">Sync your data across mobile and desktop devices securely.</p>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="syncId" placeholder="Enter Sync ID" style="margin: 0; max-width: 300px;">
+                <button onclick="simulateSync()" id="sync-btn" class="btn btn-primary"><i class="fas fa-sync-alt"></i> Sync Now</button>
+            </div>
+            <div id="sync-status" style="margin-top:15px; font-size:0.85rem; font-weight: 600;"></div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div class="list-header"><h3>Local Data Management</h3></div>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Backup your data to a file or restore it on another device.</p>
+            
+            <div style="display:flex; gap:10px;">
+                <button onclick="exportData()" class="btn btn-primary"><i class="fas fa-download"></i> Export Data</button>
+                <label class="btn">
+                    <i class="fas fa-upload"></i> Import Data
+                    <input type="file" id="importFile" onchange="importData(this)" hidden>
+                </label>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="list-header"><h3>Notifications</h3></div>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Get alerts for due assignments and 15-minute reminders before classes start.</p>
+            <button onclick="requestNotificationPermission()" class="btn"><i class="fas fa-bell"></i> Enable Browser Alerts</button>
+        </div>
+        <br>
+        <div class="card" style="border-color: rgba(220,38,38,0.5);">
+            <div class="list-header"><h3 class="text-red">Danger Zone</h3></div>
+            <button onclick="clearData()" class="btn" style="border-color:var(--primary); color:var(--primary)"><i class="fas fa-trash"></i> Reset All Data</button>
+        </div>
+    </div>
+
+</main>
+
+<div id="taskModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Task</h3></div>
+        <input type="text" id="taskTitle" placeholder="Task Title (e.g., Math Assignment)">
+        <select id="taskType">
+            <option value="Assignment">Assignment</option>
+            <option value="Quiz">Test/Quiz</option>
+            <option value="Task">General Task</option>
+        </select>
+        <input type="date" id="taskDate">
+        <div style="margin-bottom:15px">
+            <label style="font-size:0.9rem; color:var(--text-muted)">Attach File</label>
+            <input type="file" id="taskFile" style="margin-top:5px">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('taskModal')" class="btn">Cancel</button>
+            <button onclick="addTask()" class="btn btn-primary">Save Task</button>
+        </div>
+    </div>
+</div>
+
+<div id="subjectModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Course</h3></div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course Name</label>
+            <input type="text" id="subjectName" placeholder="e.g., Data Structures" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Professor Name</label>
+            <input type="text" id="subjectProf" placeholder="e.g., Dr. Smith" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room Number</label>
+            <input type="text" id="subjectRoom" placeholder="e.g., Room 402" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:15px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Lecture Duration (in minutes)</label>
+            <input type="number" id="subjectDuration" placeholder="e.g., 50 or 90" min="10" style="margin:0;">
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted)">Course Color:</label>
+            <input type="color" id="subjectColor" value="#dc2626" style="padding:0; width:40px; height:30px; border:none; cursor:pointer; background:transparent;">
+        </div>
+        
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('subjectModal')" class="btn">Cancel</button>
+            <button onclick="addSubject()" class="btn btn-primary">Save Course</button>
+        </div>
+    </div>
+</div>
+
+<div id="editSubjectModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Edit Course</h3></div>
+        <input type="hidden" id="editSubjectIndex">
+        <input type="hidden" id="editSubjectOldName">
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course Name</label>
+            <input type="text" id="editSubjectName" placeholder="Course Name" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Professor Name</label>
+            <input type="text" id="editSubjectProf" placeholder="Professor Name" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room Number</label>
+            <input type="text" id="editSubjectRoom" placeholder="Room Number" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:15px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Lecture Duration (in minutes)</label>
+            <input type="number" id="editSubjectDuration" placeholder="e.g., 50 or 90" min="10" style="margin:0;">
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted)">Course Color:</label>
+            <input type="color" id="editSubjectColor" style="padding:0; width:40px; height:30px; border:none; cursor:pointer; background:transparent;">
+        </div>
+        
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('editSubjectModal')" class="btn">Cancel</button>
+            <button onclick="saveEditSubject()" class="btn btn-primary">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<div id="routineModal" class="modal">
+    <div class="modal-content">
+        <div class="list-header"><h3>Add Routine Item</h3></div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Day of the Week</label>
+            <select id="routineDay" style="margin:0;">
+                <option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option>
+                <option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Start Time</label>
+            <input type="time" id="routineTime" style="margin:0;">
+        </div>
+        
+        <div style="margin-bottom:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course / Subject</label>
+            <select id="routineSubjectSelect" onchange="onSubjectSelect()" style="margin:0;"></select>
+        </div>
+        
+        <input type="text" id="routineNameCustom" placeholder="Custom Class/Activity Name" class="hidden" style="margin-bottom:12px;">
+        
+        <div id="routineInjectedData" class="hidden" style="margin-bottom:15px; font-size:0.85rem; color:var(--primary); font-weight:600; background:rgba(220,38,38,0.1); padding:8px; border-radius:8px;"></div>
+
+        <div style="margin-bottom:24px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Session Type</label>
+            <select id="routineType" style="margin:0;">
+                <option value="Class">Class</option>
+                <option value="Self-Study">Self-Study</option>
+            </select>
+        </div>
+        
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal('routineModal')" class="btn">Cancel</button>
+            <button onclick="addRoutine()" class="btn btn-primary">Save Routine</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const defaultData = {
+        tasks: [],
+        subjects: [],
+        routine: [],
+        settings: { darkMode: true, syncId: '', lastSync: null } 
+    };
+
+    let appData = JSON.parse(localStorage.getItem('studyFlowData')) || defaultData;
+
+    let timerInterval;
+    let timerDuration = 25 * 60;
+    let timeLeft = timerDuration;
+    let isTimerRunning = false;
+
+    function init()
+    {
+        if (appData.settings.darkMode)
+        {
+            document.body.classList.add('dark-mode');
+        }
+        renderAll();
+        checkReminders();
+        startNotificationEngine();
+    }
+
+    function saveData()
+    {
+        localStorage.setItem('studyFlowData', JSON.stringify(appData));
+        renderAll();
+    }
+
+    function renderAll()
+    {
+        renderDashboard();
+        renderTasks();
+        renderCourses();
+        renderAttendance();
+        renderRoutine();
+        renderCalendar();
+    }
+
+    function showTab(tabId)
+    {
+        document.querySelectorAll('.tab-content').forEach(el =>
+        {
+            el.classList.add('hidden');
+        });
+        
+        document.getElementById(tabId).classList.remove('hidden');
+        
+        const titles = {
+            'dashboard': 'Dashboard',
+            'tasks': 'Assignments',
+            'courses': 'Courses',
+            'attendance': 'Attendance',
+            'routine': 'Routine',
+            'calendar': 'Calendar',
+            'timer': 'Focus Timer',
+            'settings': 'Settings'
+        };
+        
+        document.getElementById('page-title').innerText = titles[tabId];
+
+        document.querySelectorAll('nav button').forEach(b =>
+        {
+            b.classList.remove('active');
+        });
+        
+        document.getElementById('nav-' + tabId).classList.add('active');
+        
+        if (tabId === 'calendar')
+        {
+            renderCalendar();
+        }
+        if (tabId === 'settings')
+        {
+            renderSettings();
+        }
+    }
+
+    function toggleTheme()
+    {
+        document.body.classList.toggle('dark-mode');
+        appData.settings.darkMode = document.body.classList.contains('dark-mode');
+        saveData();
+    }
+
+    function getContrastYIQ(hexcolor)
+    {
+        if (!hexcolor)
+        {
+            return 'black';
+        }
+        
+        hexcolor = hexcolor.replace("#", "");
+        let r = parseInt(hexcolor.substr(0,2),16);
+        let g = parseInt(hexcolor.substr(2,2),16);
+        let b = parseInt(hexcolor.substr(4,2),16);
+        let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        
+        return (yiq >= 128) ? 'black' : 'white';
+    }
+
+    function renderDashboard()
+    {
+        const pending = appData.tasks.filter(t => !t.completed).length;
+        document.getElementById('dash-pending').innerText = pending;
+
+        let totalClasses = 0;
+        let attendedClasses = 0;
+        
+        appData.subjects.forEach(s =>
+        {
+            totalClasses += s.total;
+            attendedClasses += s.present;
+        });
+        
+        const attPct = totalClasses === 0 ? 100 : Math.round((attendedClasses / totalClasses) * 100);
+        document.getElementById('dash-attendance').innerText = attPct + "%";
+        document.getElementById('dash-attendance').style.color = attPct < 75 ? 'var(--primary)' : '#10b981';
+
+        const todayDay = new Date().getDay();
+        const todayRoutine = appData.routine.filter(r => parseInt(r.day) === todayDay);
+        document.getElementById('dash-classes').innerText = todayRoutine.length;
+
+        const schedList = document.getElementById('dash-schedule-list');
+        schedList.innerHTML = '';
+        
+        if (todayRoutine.length === 0)
+        {
+            schedList.innerHTML = '<div style="padding:15px; opacity:0.6;">No classes today.</div>';
+        }
+        
+        todayRoutine.sort((a,b) => a.time.localeCompare(b.time)).forEach(r =>
+        {
+            schedList.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <div style="font-weight:700">${r.name}</div>
+                        <div style="font-size:0.8rem; opacity:0.7">${r.time} • ${r.type}</div>
+                    </div>
+                    <span class="badge badge-gray"><i class="fas fa-chevron-right"></i></span>
+                </div>`;
+        });
+
+        const deadList = document.getElementById('dash-deadline-list');
+        deadList.innerHTML = '';
+        
+        const deadlines = appData.tasks.filter(t => !t.completed).sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
+            
+        if (deadlines.length === 0)
+        {
+            deadList.innerHTML = '<div style="padding:15px; opacity:0.6;">No upcoming deadlines.</div>';
+        }
+        
+        deadlines.forEach(t =>
+        {
+            deadList.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <div style="font-weight:600">${t.title}</div>
+                        <div style="font-size:0.8rem; color:var(--primary); font-weight:700">Due: ${t.date}</div>
+                    </div>
+                    <span class="badge badge-red">${t.type}</span>
+                </div>`;
+        });
+    }
+
+    function renderTasks()
+    {
+        const list = document.getElementById('tasks-list');
+        list.innerHTML = '';
+        appData.tasks.forEach((t, index) =>
+        {
+            list.innerHTML += `
+                <div class="list-item" style="opacity: ${t.completed ? 0.5 : 1}">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div onclick="toggleTask(${index})" style="cursor:pointer; width:20px; height:20px; border:2px solid var(--border); border-radius:6px; background:${t.completed ? 'var(--primary)' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
+                            ${t.completed ? '<i class="fas fa-check" style="color:white; font-size:10px"></i>' : ''}
+                        </div>
+                        <div>
+                            <div style="font-weight:700; ${t.completed ? 'text-decoration:line-through' : ''}">${t.title}</div>
+                            <div style="font-size:0.8rem; opacity:0.7">
+                                ${t.type} • ${t.date} 
+                                ${t.file ? `• <i class="fas fa-paperclip"></i> ${t.file}` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${index})" class="btn" style="padding:5px 10px; border:none; color:var(--text-muted)"><i class="fas fa-trash"></i></button>
+                </div>`;
+        });
+    }
+
+    function addTask()
+    {
+        const title = document.getElementById('taskTitle').value;
+        const type = document.getElementById('taskType').value;
+        const date = document.getElementById('taskDate').value;
+        const fileInput = document.getElementById('taskFile');
+        const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+        if (!title || !date)
+        {
+            return alert('Please enter title and date');
+        }
+        
+        appData.tasks.push({ title, type, date, file: fileName, completed: false });
+        closeModal('taskModal');
+        saveData();
+        
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDate').value = '';
+    }
+    
+    function toggleTask(i)
+    {
+        appData.tasks[i].completed = !appData.tasks[i].completed;
+        saveData();
+    }
+    
+    function deleteTask(i)
+    {
+        if (confirm('Delete task?'))
+        {
+            appData.tasks.splice(i, 1);
+            saveData();
+        }
+    }
+
+    function renderCourses()
+    {
+        const list = document.getElementById('courses-list');
+        if (!list)
+        {
+            return;
+        }
+        
+        list.innerHTML = '';
+        appData.subjects.forEach((s, index) =>
+        {
+            list.innerHTML += `
+                <div class="card" style="padding:20px; border-left: 5px solid ${s.color || 'var(--primary)'}">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                        <h3 style="font-size:1.1rem; margin:0;">${s.name}</h3>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="openEditSubjectModal(${index})" class="btn" style="padding: 5px 10px; opacity:0.8"><i class="fas fa-pen"></i></button>
+                            <button onclick="delSub(${index})" class="btn" style="padding: 5px 10px; opacity:0.5"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">
+                        <div><i class="fas fa-user"></i> ${s.prof || 'No Professor'}</div>
+                        <div style="margin-top:5px;"><i class="fas fa-door-open"></i> ${s.room || 'No Room'}</div>
+                        <div style="margin-top:5px;"><i class="fas fa-clock"></i> ${s.duration || 60} mins</div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function renderAttendance()
+    {
+        const list = document.getElementById('attendance-list');
+        if (!list)
+        {
+            return;
+        }
+        
+        list.innerHTML = '';
+        appData.subjects.forEach((s, index) =>
+        {
+            const pct = s.total === 0 ? 100 : Math.round((s.present / s.total) * 100);
+            const color = pct < 75 ? 'var(--primary)' : '#10b981';
+            
+            list.innerHTML += `
+                <div class="card" style="padding:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-size:1.1rem">${s.name}</h3>
+                        <span style="font-weight:800; font-size:1.2rem; color:${color}">${pct}%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width:${pct}%; background-color:${color}"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:0.9rem; color:var(--text-muted)">
+                        <span>Present: <b>${s.present}</b></span>
+                        <span>Total: <b>${s.total}</b></span>
+                    </div>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="markAtt(${index}, 1)" class="btn" style="flex:1; border-color:#10b981; color:#10b981"><i class="fas fa-check"></i> Mark Present</button>
+                        <button onclick="markAtt(${index}, 0)" class="btn" style="flex:1; border-color:var(--primary); color:var(--primary)"><i class="fas fa-times"></i> Mark Absent</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function addSubject()
+    {
+        const name = document.getElementById('subjectName').value;
+        const prof = document.getElementById('subjectProf').value;
+        const room = document.getElementById('subjectRoom').value;
+        const color = document.getElementById('subjectColor').value;
+        const duration = parseInt(document.getElementById('subjectDuration').value) || 60;
+        
+        if (!name)
+        {
+            return;
+        }
+        
+        appData.subjects.push({ name, present: 0, total: 0, prof, room, color, duration });
+        
+        closeModal('subjectModal');
+        saveData();
+        
+        document.getElementById('subjectName').value = '';
+        document.getElementById('subjectProf').value = '';
+        document.getElementById('subjectRoom').value = '';
+        document.getElementById('subjectColor').value = '#dc2626';
+        document.getElementById('subjectDuration').value = '';
+    }
+    
+    function markAtt(i, p)
+    {
+        appData.subjects[i].total++;
+        if (p)
+        {
+            appData.subjects[i].present++;
+        }
+        saveData();
+    }
+    
+    function delSub(i)
+    {
+        if (confirm('Delete subject?'))
+        {
+            appData.subjects.splice(i, 1);
+            saveData();
+        }
+    }
+
+    function openEditSubjectModal(index)
+    {
+        const subject = appData.subjects[index];
+        document.getElementById('editSubjectIndex').value = index;
+        document.getElementById('editSubjectOldName').value = subject.name;
+        
+        document.getElementById('editSubjectName').value = subject.name;
+        document.getElementById('editSubjectProf').value = subject.prof || '';
+        document.getElementById('editSubjectRoom').value = subject.room || '';
+        document.getElementById('editSubjectColor').value = subject.color || '#dc2626';
+        document.getElementById('editSubjectDuration').value = subject.duration || 60;
+        
+        openModal('editSubjectModal');
+    }
+
+    function saveEditSubject()
+    {
+        const index = document.getElementById('editSubjectIndex').value;
+        const oldName = document.getElementById('editSubjectOldName').value;
+        
+        const newName = document.getElementById('editSubjectName').value;
+        const newProf = document.getElementById('editSubjectProf').value;
+        const newRoom = document.getElementById('editSubjectRoom').value;
+        const newColor = document.getElementById('editSubjectColor').value;
+        const newDuration = parseInt(document.getElementById('editSubjectDuration').value) || 60;
+        
+        if (!newName)
+        {
+            return;
+        }
+        
+        appData.subjects[index].name = newName;
+        appData.subjects[index].prof = newProf;
+        appData.subjects[index].room = newRoom;
+        appData.subjects[index].color = newColor;
+        appData.subjects[index].duration = newDuration;
+        
+        appData.routine.forEach(r =>
+        {
+            if (r.name === oldName)
+            {
+                r.name = newName;
+                r.prof = newProf;
+                r.room = newRoom;
+                r.color = newColor;
+                r.duration = newDuration;
+            }
+        });
+        
+        closeModal('editSubjectModal');
+        saveData();
+    }
+
+    function delRoutine(n, d, t)
+    {
+        appData.routine = appData.routine.filter(r => !(r.name === n && parseInt(r.day) === d && r.time === t));
+        saveData();
+    }
+
+    function renderRoutine()
+    {
+        const container = document.getElementById('routine-timetable');
+        if (!container)
+        {
+            return;
+        }
+        
+        container.innerHTML = '';
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const dayMap = [1, 2, 3, 4, 5, 6, 0];
+        
+        container.innerHTML += `<div class="tt-head"></div>`;
+        for (let i = 0; i < 7; i++)
+        {
+            container.innerHTML += `<div class="tt-head">${days[i]}</div>`;
+        }
+        
+        for (let hour = 8; hour <= 18; hour++)
+        {
+            const ampm = hour >= 12 ? 'pm' : 'am';
+            const h12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+            container.innerHTML += `<div class="tt-time">${h12} ${ampm}</div>`;
+            
+            for (let d = 0; d < 7; d++)
+            {
+                const dayIndex = dayMap[d];
+                const cellId = `cell-${dayIndex}-${hour}`;
+                container.innerHTML += `<div class="tt-cell" id="${cellId}" onclick="openRoutineModalWithTime(${dayIndex}, ${hour})"></div>`;
+            }
+        }
+        
+        appData.routine.forEach(r =>
+        {
+            const timeParts = r.time.split(':');
+            let hour = parseInt(timeParts[0]);
+            let minute = parseInt(timeParts[1]) || 0;
+            
+            if (hour < 8)
+            {
+                hour = 8;
+            }
+            if (hour > 18)
+            {
+                hour = 18;
+            }
+            
+            const cellId = `cell-${r.day}-${hour}`;
+            const cell = document.getElementById(cellId);
+            
+            if (cell)
+            {
+                let bgColor = r.color || '#64748b';
+                let textColor = getContrastYIQ(bgColor);
+                let durationMins = parseInt(r.duration) || 60;
+                
+                let topOffset = minute * 1.5;
+                let heightPx = durationMins * 1.5;
+                
+                cell.innerHTML += `
+                    <div class="tt-event" onclick="event.stopPropagation()" style="background-color: ${bgColor}; color: ${textColor}; position: absolute; top: ${topOffset + 2}px; left: 2px; width: calc(100% - 4px); height: calc(${heightPx}px - 4px); z-index: 10;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <span style="color: ${textColor}">${r.name}</span>
+                            <button onclick="delRoutine('${r.name}', ${r.day}, '${r.time}')" class="del-btn" style="color: ${textColor}"><i class="fas fa-times"></i></button>
+                        </div>
+                        <span style="font-size:0.65rem; opacity:0.9; color: ${textColor}">${r.prof ? r.prof + ' | ' : ''}${r.room || ''}</span>
+                    </div>`;
+            }
+        });
+    }
+
+    function openRoutineModalWithTime(dayIndex, hour)
+    {
+        document.getElementById('routineDay').value = dayIndex;
+        document.getElementById('routineTime').value = hour.toString().padStart(2, '0') + ':00';
+        openRoutineModal();
+    }
+
+    function openRoutineModal()
+    {
+        const select = document.getElementById('routineSubjectSelect');
+        select.innerHTML = '<option value="" disabled selected>Select a Course</option>';
+        
+        appData.subjects.forEach(s =>
+        {
+            select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+        });
+        
+        select.innerHTML += `<option value="Other">Other (Custom Activity)</option>`;
+        
+        onSubjectSelect();
+        openModal('routineModal');
+    }
+
+    function onSubjectSelect()
+    {
+        const val = document.getElementById('routineSubjectSelect').value;
+        const display = document.getElementById('routineInjectedData');
+        const subject = appData.subjects.find(s => s.name === val);
+        
+        if (subject && (subject.prof || subject.room || subject.duration))
+        {
+            display.innerHTML = `Auto-filling: ${subject.prof || 'No Prof'} | Room: ${subject.room || 'No Room'} | Duration: ${subject.duration || 60} min(s)`;
+            display.classList.remove('hidden');
+        }
+        else
+        {
+            display.classList.add('hidden');
+        }
+        
+        toggleRoutineNameInput();
+    }
+
+    function toggleRoutineNameInput()
+    {
+        const val = document.getElementById('routineSubjectSelect').value;
+        const input = document.getElementById('routineNameCustom');
+        
+        if (val === "Other")
+        {
+            input.classList.remove('hidden');
+        }
+        else
+        {
+            input.classList.add('hidden');
+        }
+    }
+
+    function addRoutine()
+    {
+        const day = document.getElementById('routineDay').value;
+        const time = document.getElementById('routineTime').value;
+        const type = document.getElementById('routineType').value;
+        
+        let name = document.getElementById('routineSubjectSelect').value;
+        let prof = "";
+        let room = "";
+        let color = "#64748b";
+        let duration = 60;
+
+        if (name === "Other")
+        {
+            name = document.getElementById('routineNameCustom').value;
+        }
+        else
+        {
+            const subject = appData.subjects.find(s => s.name === name);
+            if (subject)
+            {
+                prof = subject.prof;
+                room = subject.room;
+                color = subject.color;
+                duration = subject.duration || 60;
+            }
+        }
+        
+        if (type === "Self-Study")
+        {
+            prof = "";
+            room = "";
+        }
+
+        if (!name || !time || name === "")
+        {
+            return alert("Please select a course or enter a name, and choose a time.");
+        }
+        
+        appData.routine.push({ day, time, name, type, prof, room, color, duration });
+        
+        closeModal('routineModal'); 
+        saveData();
+        
+        document.getElementById('routineNameCustom').value = '';
+    }
+
+    function renderCalendar()
+    {
+        const now = new Date();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('calendar-month-year').innerText = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+        
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const grid = document.getElementById('calendar-body');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < firstDay; i++)
+        {
+            grid.innerHTML += `<div></div>`;
+        }
+
+        for (let d = 1; d <= daysInMonth; d++)
+        {
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const hasTask = appData.tasks.some(t => t.date === dateStr);
+            const isToday = d === now.getDate();
+            
+            grid.innerHTML += `
+                <div class="cal-day ${isToday ? 'today' : ''}">
+                    ${d}
+                    ${hasTask ? '<div class="has-event"></div>' : ''}
+                </div>`;
+        }
+    }
+
+    function updateTimerDisplay()
+    {
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        document.getElementById('timer-display').innerText = `${m}:${s}`;
+    }
+
+    function setTimer(minutes)
+    {
+        if (isTimerRunning)
+        {
+            pauseTimer();
+        }
+        timerDuration = minutes * 60;
+        timeLeft = timerDuration;
+        updateTimerDisplay();
+    }
+
+    function setCustomTimer()
+    {
+        const mins = parseInt(document.getElementById('customTime').value);
+        if (mins && mins > 0)
+        {
+            setTimer(mins);
+            document.getElementById('customTime').value = '';
+        }
+    }
+
+    function startTimer()
+    {
+        if (isTimerRunning)
+        {
+            return;
+        }
+        if (timeLeft === 0)
+        {
+            timeLeft = timerDuration;
+        }
+        
+        isTimerRunning = true;
+        timerInterval = setInterval(() =>
+        {
+            if (timeLeft > 0)
+            {
+                timeLeft--;
+                updateTimerDisplay();
+            }
+            else
+            {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                if (Notification.permission === "granted")
+                {
+                    new Notification("Study Flow Timer", { body: "Time is up! Great focus." });
+                }
+                alert("Session completed!");
+            }
+        }, 1000);
+    }
+
+    function pauseTimer()
+    {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+    }
+
+    function resetTimer()
+    {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        timeLeft = timerDuration;
+        updateTimerDisplay();
+    }
+
+    function renderSettings()
+    {
+        document.getElementById('syncId').value = appData.settings.syncId || '';
+        const statusEl = document.getElementById('sync-status');
+        
+        if (appData.settings.lastSync)
+        {
+            statusEl.innerHTML = `<i class="fas fa-check-circle text-green"></i> Last synced: ${appData.settings.lastSync}`;
+        }
+        else
+        {
+            statusEl.innerHTML = `No data synced yet.`;
+        }
+    }
+
+    function simulateSync()
+    {
+        const id = document.getElementById('syncId').value;
+        if (!id)
+        {
+            return alert("Please enter a Sync ID to connect your devices.");
+        }
+        
+        const btn = document.getElementById('sync-btn');
+        const status = document.getElementById('sync-status');
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+        btn.disabled = true;
+
+        setTimeout(() =>
+        {
+            appData.settings.syncId = id;
+            appData.settings.lastSync = new Date().toLocaleString();
+            saveData();
+            
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Now';
+            btn.disabled = false;
+            status.innerHTML = `<i class="fas fa-check-circle text-green"></i> Last synced: ${appData.settings.lastSync}`;
+        }, 1500);
+    }
+
+    function openModal(id)
+    {
+        document.getElementById(id).classList.add('open'); 
+        document.getElementById(id).style.display = 'flex';
+        setTimeout(() =>
+        {
+            document.getElementById(id).style.opacity = '1';
+        }, 10);
+    }
+    
+    function closeModal(id)
+    {
+        document.getElementById(id).style.opacity = '0';
+        setTimeout(() =>
+        {
+            document.getElementById(id).classList.remove('open');
+            document.getElementById(id).style.display = 'none';
+        }, 300);
+    }
+
+    function exportData()
+    {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "study_flow_backup.json");
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+    }
+
+    function importData(input)
+    {
+        const file = input.files[0];
+        if (!file)
+        {
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e)
+        {
+            try
+            {
+                appData = JSON.parse(e.target.result);
+                saveData();
+                alert('Data restored successfully!');
+                location.reload();
+            }
+            catch(e)
+            {
+                alert('Invalid file format');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function clearData()
+    {
+        if (confirm("Are you sure? This cannot be undone."))
+        {
+            localStorage.removeItem('studyFlowData');
+            location.reload();
+        }
+    }
+
+    function requestNotificationPermission()
+    {
+        if (!("Notification" in window))
+        {
+            alert("Browser does not support notifications");
+        }
+        else
+        {
+            Notification.requestPermission().then(p =>
+            {
+                if (p === "granted")
+                {
+                    new Notification("Study Flow", { body: "Notifications are successfully enabled!" });
+                }
+            });
+        }
+    }
+
+    function checkReminders()
+    {
+        if (Notification.permission === "granted")
+        {
+            const today = new Date().toISOString().split('T')[0];
+            const dueTasks = appData.tasks.filter(t => t.date === today && !t.completed);
+            
+            if (dueTasks.length > 0)
+            {
+                new Notification("Study Flow Deadlines", { body: `Reminder: You have ${dueTasks.length} task(s) due today!` });
+            }
+        }
+    }
+
+    function startNotificationEngine()
+    {
+        setInterval(() =>
+        {
+            if (Notification.permission !== "granted")
+            {
+                return;
+            }
+            
+            const now = new Date();
+            const currentDay = now.getDay();
+            
+            appData.routine.forEach(r =>
+            {
+                if (parseInt(r.day) === currentDay)
+                {
+                    let routineTime = new Date(now.toDateString() + " " + r.time);
+                    let diffMs = routineTime - now;
+                    let diffMins = Math.round(diffMs / 60000);
+                    
+                    if (diffMins === 15)
+                    {
+                        new Notification("Upcoming Class/Study Session", { 
+                            body: `Your session "${r.name}" is starting in 15 minutes at ${r.time}.` 
+                        });
+                    }
+                }
+            });
+        }, 60000);
+    }
+
+    init();
+</script>
+</body>
+</html>
