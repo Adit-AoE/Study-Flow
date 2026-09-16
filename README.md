@@ -22,5 +22,5 @@ Implemented Features (from version 1.1 to 2.0):
 15) Added an optional description option for tasks
 16) Added the ability to edit tasks and its subtasks
 17) Added an option to navigate between months
-19) Backup file name format changed to: StudyFlow_backup_YYYY-MM-DD-hhmmss
-20) Subject tag in assignment is now in the colour of the subject/course instead of grey
+18) Backup file name format changed to: StudyFlow_backup_YYYY-MM-DD-hhmmss
+19) Subject tag in assignment is now in the colour of the subject/course instead of grey
