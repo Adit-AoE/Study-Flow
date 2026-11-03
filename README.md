@@ -4,7 +4,7 @@ PBL project by Aditya Singh
 
 **Changelog**
 
-Implemented Features (from version 1.1 to 2.0):
+Implemented Features (from version 1.4 to 2.0):
 1) Period duration changed to be in minutes instead of hours.
 2) Always visible labels for everything in all the Add & Edit windows
 3) Ability to edit & delete periods
