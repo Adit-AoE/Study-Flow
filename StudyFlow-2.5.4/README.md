@@ -1,4 +1,4 @@
-# Study Flow – Android (v2.5)
+# Study Flow – Android (v2.5.4)
 
 Native Android version of the Study Flow web app, written in Kotlin with Jetpack Compose and Material 3.
 
