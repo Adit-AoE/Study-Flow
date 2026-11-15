@@ -1,0 +1,3997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Flow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-glow: rgba(220, 38, 38, 0.3);
+            --primary-soft: rgba(220, 38, 38, 0.1);
+            --primary-hover: rgba(220, 38, 38, 0.06);
+            --danger-red: #ef4444;
+            --exam-red: #ff1e1e;
+            --holiday-blue: #6366F1;
+            --bg: #F4F0E9;
+            --card-bg: #FDFAF5;
+            --text: #1a1208;
+            --text-muted: #475569;
+            --border: #ddd8ce;
+            --sidebar-bg: #EDE8DF;
+            --sidebar-width: 260px;
+            --glass-border: 1px solid rgba(0, 0, 0, 0.07);
+            --input-bg: #f7f3ec;
+        }
+
+        body.dark-mode {
+            --bg: #000000;
+            --card-bg: #111111;
+            --text: #e8e4dc;
+            --text-muted: #94a0aa;
+            --border: #2a2a2a;
+            --sidebar-bg: #0a0a0a;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --input-bg: #181818;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        aside {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg, var(--card-bg));
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        nav button {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        nav button:hover {
+            background: var(--primary-hover);
+            color: var(--primary);
+        }
+
+        nav button.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .sem-switcher-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4px 12px;
+        }
+
+        .sem-switcher-wrap i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .sem-switcher-wrap select {
+            width: auto;
+            margin: 0;
+            padding: 6px 4px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .sem-switcher-wrap select:focus {
+            box-shadow: none;
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(0.9);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-exam {
+            background: var(--exam-red);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 30, 30, 0.35);
+        }
+
+        .btn-exam:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            border: var(--glass-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .list-header h3 {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+        }
+
+        .badge-red {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .badge-exam {
+            background: rgba(255, 30, 30, 0.16);
+            color: var(--exam-red);
+            border: 1px solid rgba(255, 30, 30, 0.35);
+        }
+
+        .badge-gray {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--text-muted);
+        }
+
+        .badge-green {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .badge-holiday {
+            background: rgba(99, 102, 241, 0.18);
+            color: var(--holiday-blue);
+        }
+
+        /* Left-line + highlighted background (no squircle border) */
+        .dash-holiday-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 16px 14px;
+            background: rgba(99, 102, 241, 0.12);
+            border: none;
+            border-left: 4px solid var(--holiday-blue);
+            border-radius: 0;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dash-holiday-banner:hover {
+            background: rgba(99, 102, 241, 0.18);
+        }
+
+        .dash-exam-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 16px 14px;
+            background: rgba(255, 30, 30, 0.12);
+            border: none;
+            border-left: 4px solid var(--exam-red);
+            border-radius: 0;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dash-exam-banner:last-child {
+            margin-bottom: 0;
+        }
+
+        .dash-exam-banner:hover {
+            background: rgba(255, 30, 30, 0.18);
+        }
+
+        .att-alert-danger {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: var(--danger-red);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .att-alert-muted-red {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.07);
+            border: 1px solid rgba(239, 68, 68, 0.18);
+            color: rgba(239, 68, 68, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .day-action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .day-action-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 12px;
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            background: var(--input-bg, var(--bg));
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .day-action-card i {
+            font-size: 1.35rem;
+        }
+
+        .day-action-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .day-action-card.action-holiday:hover {
+            border-color: var(--holiday-blue);
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--holiday-blue);
+        }
+
+        .day-action-card.action-exam:hover {
+            border-color: var(--exam-red);
+            background: rgba(255, 30, 30, 0.1);
+            color: var(--exam-red);
+        }
+
+        .day-action-card.action-task:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .progress-container {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--input-bg, var(--bg));
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .cal-head {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding-bottom: 10px;
+        }
+
+        .cal-day {
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            position: relative;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .cal-day:hover {
+            background: var(--border);
+        }
+
+        .cal-day.today {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--primary-soft);
+        }
+
+        .cal-day.weekend {
+            background-color: var(--primary-hover);
+            color: var(--primary);
+        }
+
+        .cal-day.in-semester {
+            border-top: 3px solid rgba(16, 185, 129, 0.55);
+            background-color: rgba(16, 185, 129, 0.03);
+        }
+
+        .cal-day.sem-start-day {
+            border: 2px solid #10b981;
+            background-color: rgba(16, 185, 129, 0.12);
+        }
+
+        .cal-day.sem-end-day {
+            border: 2px solid #f59e0b;
+            background-color: rgba(245, 158, 11, 0.12);
+        }
+
+        .cal-day.holiday-day {
+            border: 1.5px solid rgba(99, 102, 241, 0.65);
+            background-color: rgba(99, 102, 241, 0.11);
+        }
+
+        /* Exam day styling strictly overrides holiday-day and other day states */
+        .cal-day.exam-day {
+            border: 2px solid var(--exam-red) !important;
+            background-color: rgba(255, 30, 30, 0.14) !important;
+        }
+
+        .sem-cal-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 3px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sem-cal-start {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .sem-cal-end {
+            background: #f59e0b;
+            color: #000000;
+        }
+
+        .sem-cal-holiday {
+            background: var(--holiday-blue);
+            color: #ffffff;
+        }
+
+        .sem-cal-exam {
+            background: var(--exam-red);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(255, 30, 30, 0.35);
+        }
+
+        .mode-toggle-group {
+            display: flex;
+            background: var(--input-bg, var(--bg));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .mode-toggle-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .mode-toggle-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .accent-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 0.8rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .accent-swatch:hover {
+            transform: scale(1.08);
+        }
+
+        .accent-swatch.active {
+            border-color: var(--text);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 32px;
+            border-radius: 24px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: var(--glass-border);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-red {
+            color: var(--primary);
+        }
+
+        .text-green {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: var(--border);
+                padding: 16px;
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                gap: 8px;
+                padding-bottom: 4px;
+            }
+
+            nav button {
+                width: auto;
+                white-space: nowrap;
+                margin: 0;
+            }
+
+            .logo {
+                display: none;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            .day-action-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .timetable-wrapper {
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .timetable {
+            min-width: 700px;
+            display: grid;
+            grid-template-columns: 50px repeat(7, 1fr);
+            grid-template-rows: 40px repeat(11, 90px);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .timetable>div {
+            background: var(--card-bg);
+        }
+
+        .tt-head {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .tt-time {
+            padding: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .tt-cell {
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2px;
+            gap: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .tt-cell:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .tt-event {
+            border-radius: 6px;
+            padding: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .tt-event span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tt-event .del-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            align-self: flex-end;
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .tt-event .del-btn:hover {
+            opacity: 1;
+        }
+
+        .stat-card[onclick] {
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .stat-card[onclick]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-item[onclick] {
+            transition: background 0.2s;
+        }
+
+        .list-item[onclick]:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ── Dark-mode contrast refinements ── */
+        body.dark-mode aside {
+            background: var(--sidebar-bg);
+            border-right-color: #1e1e1e;
+        }
+
+        body.dark-mode .card {
+            background: #111111;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .modal-content {
+            background: #161616;
+            border: 1px solid #2a2a2a;
+        }
+
+        body.dark-mode .stat-icon {
+            background: var(--primary-soft);
+        }
+
+        body.dark-mode nav button:not(.active) {
+            color: #94a0aa;
+        }
+
+        body.dark-mode nav button:not(.active):hover {
+            background: var(--primary-hover);
+            color: var(--primary);
+        }
+
+        body.dark-mode .list-item {
+            border-bottom-color: #1e1e1e;
+        }
+
+        body.dark-mode .list-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        body.dark-mode .badge-gray {
+            background: rgba(255, 255, 255, 0.06);
+            color: #94a0aa;
+        }
+
+        body.dark-mode .badge-red {
+            background: var(--primary-soft);
+        }
+
+        body.dark-mode .progress-container {
+            background: #222;
+        }
+
+        body.dark-mode .timetable {
+            background: #1a1a1a;
+            border-color: #1a1a1a;
+        }
+
+        body.dark-mode .timetable>div {
+            background: #111111;
+        }
+
+        body.dark-mode .tt-cell {
+            border-color: #1e1e1e;
+        }
+
+        body.dark-mode .tt-cell:hover {
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        body.dark-mode .cal-day {
+            border-color: #2a2a2a;
+            background: #141414;
+        }
+
+        body.dark-mode .cal-day:hover {
+            background: #1e1e1e;
+        }
+
+        body.dark-mode .cal-day.today {
+            background-color: var(--primary-soft);
+            border-color: var(--primary);
+        }
+
+        body.dark-mode .cal-day.weekend {
+            background-color: var(--primary-hover);
+        }
+
+        body.dark-mode .cal-day.in-semester {
+            border-top-color: rgba(16, 185, 129, 0.65);
+            background-color: rgba(16, 185, 129, 0.03);
+        }
+
+        body.dark-mode .cal-day.sem-start-day {
+            background-color: rgba(16, 185, 129, 0.12);
+        }
+
+        body.dark-mode .cal-day.sem-end-day {
+            background-color: rgba(245, 158, 11, 0.12);
+        }
+
+        body.dark-mode .cal-day.holiday-day {
+            border-color: rgba(99, 102, 241, 0.7);
+            background-color: rgba(99, 102, 241, 0.15);
+        }
+
+        body.dark-mode .cal-day.exam-day {
+            border-color: var(--exam-red) !important;
+            background-color: rgba(255, 30, 30, 0.18) !important;
+        }
+
+        body.dark-mode .dash-holiday-banner {
+            background: rgba(99, 102, 241, 0.16);
+        }
+
+        body.dark-mode .dash-holiday-banner:hover {
+            background: rgba(99, 102, 241, 0.22);
+        }
+
+        body.dark-mode .dash-exam-banner {
+            background: rgba(255, 30, 30, 0.16);
+        }
+
+        body.dark-mode .dash-exam-banner:hover {
+            background: rgba(255, 30, 30, 0.22);
+        }
+
+        body.dark-mode .att-alert-muted-red {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.22);
+            color: rgba(248, 113, 113, 0.82);
+        }
+
+        body.dark-mode input,
+        body.dark-mode select {
+            background: #181818;
+            border-color: #2a2a2a;
+            color: #e8e4dc;
+        }
+
+        body.dark-mode input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        body.dark-mode .sem-switcher-wrap {
+            background: #161616;
+            border-color: #2a2a2a;
+        }
+
+        body.dark-mode .sem-switcher-wrap select {
+            background: transparent;
+            color: #e8e4dc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <div class="logo">
+            <i class="fas fa-layer-group"></i> Study Flow
+        </div>
+        <nav>
+            <button onclick="showTab('dashboard')" class="active" id="nav-dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+            <button onclick="showTab('tasks')" id="nav-tasks">
+                <i class="fas fa-check-square"></i> Assignments
+            </button>
+            <button onclick="showTab('courses')" id="nav-courses">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button onclick="showTab('attendance')" id="nav-attendance">
+                <i class="fas fa-chart-pie"></i> Attendance
+            </button>
+            <button onclick="showTab('routine')" id="nav-routine">
+                <i class="fas fa-clock"></i> Routine
+            </button>
+            <button onclick="showTab('calendar')" id="nav-calendar">
+                <i class="fas fa-calendar-alt"></i> Calendar
+            </button>
+            <button onclick="showTab('timer')" id="nav-timer">
+                <i class="fas fa-stopwatch"></i> Focus Timer
+            </button>
+            <button onclick="showTab('settings')" id="nav-settings">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <h1 id="page-title">Dashboard</h1>
+            <div class="header-actions">
+                <div class="sem-switcher-wrap" title="Switch Active Semester">
+                    <i class="fas fa-graduation-cap"></i>
+                    <select id="headerSemesterSelect" onchange="switchSemester(this.value)"></select>
+                </div>
+                <button onclick="toggleTheme()" class="btn">
+                    <i class="fas fa-moon"></i> Toggle Theme
+                </button>
+            </div>
+        </header>
+
+        <div id="dashboard" class="tab-content animate-fade">
+            <div class="grid">
+                <div class="card stat-card" onclick="showTab('tasks')" style="cursor:pointer;"
+                    title="Go to Assignments">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div>
+                        <div class="stat-val" id="dash-pending">0</div>
+                        <div class="stat-label">Pending Tasks</div>
+                    </div>
+                </div>
+                <div class="card stat-card" onclick="showTab('attendance')" style="cursor:pointer;"
+                    title="Go to Attendance">
+                    <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                    <div>
+                        <div class="stat-val" id="dash-attendance">0%</div>
+                        <div class="stat-label">Avg. Attendance</div>
+                    </div>
+                </div>
+                <div class="card stat-card" onclick="showTab('routine')" style="cursor:pointer;" title="Go to Routine">
+                    <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div>
+                        <div class="stat-val" id="dash-classes">0</div>
+                        <div class="stat-label">Classes Today</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                <div class="card">
+                    <div class="list-header">
+                        <h3><i class="fas fa-hourglass-half text-red"></i> Upcoming Deadlines</h3>
+                    </div>
+                    <div id="dash-deadline-list"></div>
+                </div>
+                <div class="card">
+                    <div class="list-header">
+                        <h3><i class="fas fa-stopwatch text-red"></i> Today's Schedule</h3>
+                    </div>
+                    <div id="dash-schedule-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tasks" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header">
+                    <h3>My Assignments, Tasks & Exams</h3>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button onclick="openTaskModal('Exam')" class="btn btn-exam"><i
+                                class="fas fa-file-signature"></i> Add Exam</button>
+                        <button onclick="openTaskModal('Assignment')" class="btn btn-primary"><i
+                                class="fas fa-plus"></i> New Task</button>
+                    </div>
+                </div>
+                <div id="tasks-list"></div>
+            </div>
+        </div>
+
+        <div id="courses" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header">
+                    <h3>My Courses</h3>
+                    <button onclick="openModal('subjectModal')" class="btn btn-primary"><i class="fas fa-plus"></i> Add
+                        Course</button>
+                </div>
+                <div class="grid" id="courses-list"></div>
+            </div>
+        </div>
+
+        <div id="attendance" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header">
+                    <h3>Subject Attendance Tracker</h3>
+                </div>
+                <div class="grid" id="attendance-list"></div>
+            </div>
+        </div>
+
+        <div id="routine" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header">
+                    <h3>Weekly Routine</h3>
+                    <button onclick="openRoutineModal()" class="btn btn-primary"><i class="fas fa-plus"></i> Add
+                        Session</button>
+                </div>
+                <div class="timetable-wrapper">
+                    <div id="routine-timetable" class="timetable"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="calendar" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header" style="justify-content: space-between; margin-bottom: 10px;">
+                    <div style="display:flex; align-items:center; gap: 12px;">
+                        <i class="fas fa-chevron-left" onclick="changeMonth(-1)"
+                            style="cursor:pointer; padding: 10px;"></i>
+                        <h3 id="calendar-month-year" style="margin: 0; min-width: 150px; text-align: center;">Month Year
+                        </h3>
+                        <i class="fas fa-chevron-right" onclick="changeMonth(1)"
+                            style="cursor:pointer; padding: 10px;"></i>
+                    </div>
+                    <div style="display:flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="openTaskModal('Exam')" class="btn btn-exam"><i
+                                class="fas fa-file-signature"></i> Schedule Exam</button>
+                        <button onclick="openHolidayModal('single')" class="btn"><i class="fas fa-calendar-day"></i>
+                            Declare Day Off</button>
+                        <button onclick="openHolidayModal('range')" class="btn"
+                            style="background:var(--holiday-blue); color:#fff; border:none;"><i
+                                class="fas fa-umbrella-beach"></i> Declare Holiday Range</button>
+                    </div>
+                </div>
+                <div id="calendar-sem-info"
+                    style="text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px; font-weight: 600;">
+                </div>
+                <div class="calendar-grid">
+                    <div class="cal-head">MON</div>
+                    <div class="cal-head">TUE</div>
+                    <div class="cal-head">WED</div>
+                    <div class="cal-head">THU</div>
+                    <div class="cal-head">FRI</div>
+                    <div class="cal-head">SAT</div>
+                    <div class="cal-head">SUN</div>
+                </div>
+                <div id="calendar-body" class="calendar-grid"></div>
+            </div>
+        </div>
+
+        <div id="timer" class="tab-content hidden">
+            <div class="card" style="text-align: center; padding: 60px 20px;">
+                <div
+                    style="display:flex; justify-content:center; gap:10px; margin-bottom:30px; align-items:center; flex-wrap: wrap;">
+                    <button onclick="setTimer(25)" class="badge badge-gray" style="padding: 8px 16px;">Pomodoro
+                        (25m)</button>
+                    <button onclick="setTimer(5)" class="badge badge-gray" style="padding: 8px 16px;">Short Break
+                        (5m)</button>
+                    <button onclick="setTimer(15)" class="badge badge-gray" style="padding: 8px 16px;">Long Break
+                        (15m)</button>
+
+                    <div
+                        style="display:flex; align-items:center; gap: 5px; margin-left: 10px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border);">
+                        <input type="number" id="customTime" placeholder="Min"
+                            style="width: 60px; padding: 4px 8px; margin: 0; min-height: 0; border: none; background: transparent; color: var(--text); font-weight: 600;"
+                            min="1">
+                        <button onclick="setCustomTimer()" class="badge badge-gray"
+                            style="padding: 6px 12px; margin:0;">Set Custom</button>
+                    </div>
+                </div>
+
+                <div id="timer-display"
+                    style="font-size: 6rem; font-weight: 800; font-family: monospace; color: var(--primary); letter-spacing: -2px;">
+                    25:00
+                </div>
+
+                <div style="display:flex; justify-content:center; gap:15px; margin-top:40px;">
+                    <button onclick="startTimer()" class="btn btn-primary" style="padding: 12px 30px;"><i
+                            class="fas fa-play"></i> Start</button>
+                    <button onclick="pauseTimer()" class="btn" style="padding: 12px 30px;"><i class="fas fa-pause"></i>
+                        Pause</button>
+                    <button onclick="resetTimer()" class="btn" style="padding: 12px 30px;"><i class="fas fa-redo"></i>
+                        Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content hidden">
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-palette text-red"></i> Appearance & Accent Colour</h3>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:16px; font-size:0.95rem;">Choose a standard accent
+                    colour preset or pick any custom colour to personalize Study Flow.</p>
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div id="accent-presets" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"></div>
+                    <div
+                        style="display:inline-flex; align-items:center; gap:8px; background:var(--input-bg, var(--bg)); padding:6px 12px; border-radius:12px; border:1px solid var(--border);">
+                        <label for="customAccentPicker"
+                            style="font-size:0.82rem; font-weight:700; color:var(--text-muted); cursor:pointer;">Custom:</label>
+                        <input type="color" id="customAccentPicker" onchange="setAccentColor(this.value)"
+                            style="padding:0; margin:0; width:32px; height:26px; border:none; cursor:pointer; background:transparent;">
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-graduation-cap text-red"></i> Semester Management</h3>
+                    <button onclick="openSemesterModal()" class="btn btn-primary"><i class="fas fa-plus"></i> New
+                        Semester</button>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:16px; font-size:0.95rem;">Switch between semesters or
+                    create a new blank semester with custom start and end dates.</p>
+                <div id="semesters-list"></div>
+            </div>
+            <br>
+
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-cloud text-red"></i> Cross-Platform Sync</h3>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.95rem;">Sync your data across mobile
+                    and desktop devices securely.</p>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" id="syncId" placeholder="Enter Sync ID" style="margin: 0; max-width: 300px;">
+                    <button onclick="simulateSync()" id="sync-btn" class="btn btn-primary"><i
+                            class="fas fa-sync-alt"></i> Sync Now</button>
+                </div>
+                <div id="sync-status" style="margin-top:15px; font-size:0.85rem; font-weight: 600;"></div>
+            </div>
+            <br>
+
+            <div class="card">
+                <div class="list-header">
+                    <h3>Local Data Management</h3>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Backup your data to a file or restore it on
+                    another device (with merge or replace options).</p>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button onclick="exportData()" class="btn btn-primary"><i class="fas fa-download"></i> Export
+                        Data</button>
+                    <label class="btn">
+                        <i class="fas fa-upload"></i> Import Data
+                        <input type="file" id="importFile" accept=".json" onchange="importData(this)" hidden>
+                    </label>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="list-header">
+                    <h3>Notifications</h3>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Get alerts for due assignments, exams, and
+                    15-minute reminders before classes start.</p>
+                <button onclick="requestNotificationPermission()" class="btn"><i class="fas fa-bell"></i> Enable Browser
+                    Alerts</button>
+            </div>
+            <br>
+            <div class="card" style="border-color: rgba(239,68,68,0.5);">
+                <div class="list-header">
+                    <h3 style="color:var(--danger-red);">Danger Zone</h3>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:16px; font-size:0.9rem;">Reset only the currently
+                    active semester's data or wipe everything across the entire app.</p>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button onclick="resetCurrentSemester()" class="btn"
+                        style="border-color:var(--danger-red); color:var(--danger-red)">
+                        <i class="fas fa-eraser"></i> Reset Current Semester
+                    </button>
+                    <button onclick="clearData()" class="btn"
+                        style="background:var(--danger-red); color:white; border:none;">
+                        <i class="fas fa-trash"></i> Reset All Data
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="list-header">
+                    <h3><i class="fas fa-info-circle text-red"></i> About Study Flow</h3>
+                    <span class="badge badge-red" style="font-size:0.8rem; padding:6px 12px;">v3.0.0</span>
+                </div>
+                <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+                    Study Flow is an offline-first academic companion designed to streamline semester organization,
+                    course management, attendance tracking with safe-bunk analytics, exam & holiday scheduling, weekly
+                    timetables, and Pomodoro focus sessions.
+                </p>
+                <div class="grid" style="margin-bottom:20px; gap:16px;">
+                    <div
+                        style="padding:16px; border-radius:14px; background:var(--input-bg, var(--bg)); border:1px solid var(--border);">
+                        <div
+                            style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+                            Created & Developed By</div>
+                        <div style="font-size:1.1rem; font-weight:800; margin-top:4px;">Aditya Singh</div>
+                        <div style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-top:2px;">
+                            <i class="fab fa-github"></i> @Adit-AoE
+                        </div>
+                    </div>
+                    <div
+                        style="padding:16px; border-radius:14px; background:var(--input-bg, var(--bg)); border:1px solid var(--border);">
+                        <div
+                            style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+                            Architecture & Stack</div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+                            <span class="badge badge-gray" style="cursor:default;">HTML5 / CSS3</span>
+                            <span class="badge badge-gray" style="cursor:default;">Vanilla JS</span>
+                            <span class="badge badge-gray" style="cursor:default;">LocalStorage Engine</span>
+                            <span class="badge badge-gray" style="cursor:default;">Web Notifications API</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <a href="https://github.com/Adit-AoE/Study-Flow" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-primary">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                    <span style="font-size:0.82rem; color:var(--text-muted); font-weight:600;">
+                        Study Flow v3.0.0 • Built by Aditya Singh (Adit-AoE)
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 3-Option Calendar Date Action Modal -->
+    <div id="dayActionModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3><i class="fas fa-calendar-plus text-red"></i> <span id="dayActionDateTitle">Selected Date</span>
+                </h3>
+            </div>
+            <input type="hidden" id="selectedCalendarDate" value="">
+            <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">
+                Choose what you would like to set up for this date (the date will be pre-filled automatically):
+            </p>
+
+            <div class="day-action-grid">
+                <button type="button" class="day-action-card action-holiday" onclick="chooseDayAction('holiday')">
+                    <i class="fas fa-umbrella-beach" style="color:var(--holiday-blue);"></i>
+                    <span>Day Off / Holiday</span>
+                </button>
+                <button type="button" class="day-action-card action-exam" onclick="chooseDayAction('exam')">
+                    <i class="fas fa-file-signature" style="color:var(--exam-red);"></i>
+                    <span>Exam</span>
+                </button>
+                <button type="button" class="day-action-card action-task" onclick="chooseDayAction('task')">
+                    <i class="fas fa-tasks" style="color:var(--primary);"></i>
+                    <span>Assignment / Task</span>
+                </button>
+            </div>
+
+            <div id="dayActionExistingSection" class="hidden"
+                style="border-top:1px solid var(--border); padding-top:14px; margin-bottom:16px;">
+                <div
+                    style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+                    Scheduled on this Date
+                </div>
+                <div id="dayActionExistingList"
+                    style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;"></div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end;">
+                <button onclick="closeModal('dayActionModal')" class="btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Holiday / Days Off Modal -->
+    <div id="holidayModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3 id="holidayModalTitle"><i class="fas fa-umbrella-beach" style="color:var(--holiday-blue)"></i>
+                    Declare Holiday / Days Off</h3>
+            </div>
+            <input type="hidden" id="editHolidayId" value="">
+
+            <div class="mode-toggle-group">
+                <button type="button" id="modeBtnSingle" class="mode-toggle-btn active"
+                    onclick="setHolidayMode('single')">
+                    <i class="fas fa-calendar-day"></i> Single Day Off
+                </button>
+                <button type="button" id="modeBtnRange" class="mode-toggle-btn" onclick="setHolidayMode('range')">
+                    <i class="fas fa-calendar-week"></i> Range of Days Off
+                </button>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Holiday
+                    Name (Optional)</label>
+                <input type="text" id="holidayName" placeholder="Leave blank for 'Day Off' (e.g., Mid-Sem Break)"
+                    style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label id="holidayStartLabel"
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Date</label>
+                <input type="date" id="holidayStartDate" style="margin:0;">
+            </div>
+
+            <div id="holidayEndWrap" class="hidden" style="margin-bottom:20px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">End
+                    Date</label>
+                <input type="date" id="holidayEndDate" style="margin:0;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:20px;">
+                <button onclick="resetHolidayForm(); closeModal('holidayModal')" class="btn">Close</button>
+                <button onclick="saveHoliday()" id="saveHolidayBtn" class="btn"
+                    style="background:var(--holiday-blue); color:#fff; border:none;">Save Holiday</button>
+            </div>
+
+            <div style="border-top:1px solid var(--border); padding-top:16px;">
+                <div
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
+                    Declared Holidays in Current Semester
+                </div>
+                <div id="holidays-manage-list" style="max-height:180px; overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Semester Modal -->
+    <div id="semesterModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Create New Semester</h3>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Semester
+                    Name</label>
+                <input type="text" id="semName" placeholder="e.g., Semester 6" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Start
+                    Date (Optional)</label>
+                <input type="date" id="semStartDate" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">End
+                    Date (Optional)</label>
+                <input type="date" id="semEndDate" style="margin:0;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('semesterModal')" class="btn">Cancel</button>
+                <button onclick="addSemester()" class="btn btn-primary">Create Semester</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Semester Modal -->
+    <div id="editSemesterModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Edit Semester</h3>
+            </div>
+            <input type="hidden" id="editSemId">
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Semester
+                    Name</label>
+                <input type="text" id="editSemName" placeholder="e.g., Semester 5" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Start
+                    Date (Optional)</label>
+                <input type="date" id="editSemStartDate" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">End
+                    Date (Optional)</label>
+                <input type="date" id="editSemEndDate" style="margin:0;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('editSemesterModal')" class="btn">Cancel</button>
+                <button onclick="saveEditSemester()" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Data Choice Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3><i class="fas fa-file-import text-red"></i> Import Data Options</h3>
+            </div>
+            <p id="importSummaryText"
+                style="color:var(--text-muted); margin-bottom:20px; font-size:0.95rem; line-height:1.5;">
+                How would you like to import this backup file?
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+                <button onclick="confirmImport('merge')" class="btn btn-primary"
+                    style="justify-content:center; padding:14px;">
+                    <i class="fas fa-code-branch"></i> Merge with Old Data
+                </button>
+                <button onclick="confirmImport('replace')" class="btn"
+                    style="justify-content:center; padding:14px; border-color:var(--primary); color:var(--primary);">
+                    <i class="fas fa-sync-alt"></i> Replace Old Data
+                </button>
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+                <button onclick="cancelImport()" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3 id="taskModalHeading">Add Task</h3>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Title</label>
+                <input type="text" id="taskTitle" placeholder="e.g., Mid-Term Exam or Math Assignment"
+                    style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Description
+                    (Optional)</label>
+                <input type="text" id="taskDesc" placeholder="Brief description or syllabus notes" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Type</label>
+                <select id="taskType" onchange="onTaskTypeChange('add')" style="margin:0;">
+                    <option value="Assignment">Assignment</option>
+                    <option value="Exam">Exam</option>
+                    <option value="Quiz">Test/Quiz</option>
+                    <option value="Project">Project</option>
+                    <option value="Lab">Lab Assignment</option>
+                    <option value="Task">General Task</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    / Subject</label>
+                <select id="taskSubject" style="margin:0;"></select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label id="taskDateLabel"
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Deadline
+                    / Date</label>
+                <input type="date" id="taskDate" style="margin:0;">
+            </div>
+
+            <div id="taskExamFields" class="hidden"
+                style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                <div>
+                    <label
+                        style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Exam
+                        Time (Optional)</label>
+                    <input type="time" id="taskTime" style="margin:0;">
+                </div>
+                <div>
+                    <label
+                        style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room
+                        / Venue (Optional)</label>
+                    <input type="text" id="taskRoom" placeholder="e.g., Hall B / 302" style="margin:0;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtasks</label>
+                <div id="taskSubtasksList" style="margin-bottom:8px;"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="taskSubtaskInput" placeholder="New subtask" style="margin:0;">
+                    <button onclick="addTempSubtask('taskSubtaskInput', 'taskSubtasksList')" class="btn"
+                        style="padding:10px 15px;">Add</button>
+                </div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Attach
+                    File</label>
+                <input type="file" id="taskFile" style="margin:0;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('taskModal')" class="btn">Cancel</button>
+                <button onclick="addTask()" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3 id="editTaskModalHeading">Edit Task</h3>
+            </div>
+
+            <input type="hidden" id="editTaskIndex">
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Title</label>
+                <input type="text" id="editTaskTitle" placeholder="e.g., Mid-Term Exam or Math Assignment"
+                    style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Description
+                    (Optional)</label>
+                <input type="text" id="editTaskDesc" placeholder="Brief description" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Type</label>
+                <select id="editTaskType" onchange="onTaskTypeChange('edit')" style="margin:0;">
+                    <option value="Assignment">Assignment</option>
+                    <option value="Exam">Exam</option>
+                    <option value="Quiz">Test/Quiz</option>
+                    <option value="Project">Project</option>
+                    <option value="Lab">Lab Assignment</option>
+                    <option value="Task">General Task</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    / Subject</label>
+                <select id="editTaskSubject" style="margin:0;"></select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label id="editTaskDateLabel"
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Deadline
+                    / Date</label>
+                <input type="date" id="editTaskDate" style="margin:0;">
+            </div>
+
+            <div id="editTaskExamFields" class="hidden"
+                style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                <div>
+                    <label
+                        style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Exam
+                        Time (Optional)</label>
+                    <input type="time" id="editTaskTime" style="margin:0;">
+                </div>
+                <div>
+                    <label
+                        style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room
+                        / Venue (Optional)</label>
+                    <input type="text" id="editTaskRoom" placeholder="e.g., Hall B / 302" style="margin:0;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Subtasks</label>
+                <div id="editTaskSubtasksList" style="margin-bottom:8px;"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="editTaskSubtaskInput" placeholder="New subtask" style="margin:0;">
+                    <button onclick="addTempSubtask('editTaskSubtaskInput', 'editTaskSubtasksList')" class="btn"
+                        style="padding:10px 15px;">Add</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('editTaskModal')" class="btn">Cancel</button>
+                <button onclick="saveEditTask()" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Add Course</h3>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    Name</label>
+                <input type="text" id="subjectName" placeholder="e.g., Data Structures" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Professor
+                    Name</label>
+                <input type="text" id="subjectProf" placeholder="e.g., Dr. Smith" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room
+                    Number</label>
+                <input type="text" id="subjectRoom" placeholder="e.g., Room 402" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Lecture
+                    Duration (in minutes)</label>
+                <input type="number" id="subjectDuration" placeholder="e.g., 50 or 90" min="10" style="margin:0;">
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted)">Course Color:</label>
+                <input type="color" id="subjectColor" value="#dc2626"
+                    style="padding:0; width:40px; height:30px; border:none; cursor:pointer; background:transparent;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('subjectModal')" class="btn">Cancel</button>
+                <button onclick="addSubject()" class="btn btn-primary">Save Course</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editSubjectModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Edit Course</h3>
+            </div>
+            <input type="hidden" id="editSubjectIndex">
+            <input type="hidden" id="editSubjectOldName">
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    Name</label>
+                <input type="text" id="editSubjectName" placeholder="Course Name" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Professor
+                    Name</label>
+                <input type="text" id="editSubjectProf" placeholder="Professor Name" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Room
+                    Number</label>
+                <input type="text" id="editSubjectRoom" placeholder="Room Number" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Lecture
+                    Duration (in minutes)</label>
+                <input type="number" id="editSubjectDuration" placeholder="e.g., 50 or 90" min="10" style="margin:0;">
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted)">Course Color:</label>
+                <input type="color" id="editSubjectColor"
+                    style="padding:0; width:40px; height:30px; border:none; cursor:pointer; background:transparent;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('editSubjectModal')" class="btn">Cancel</button>
+                <button onclick="saveEditSubject()" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="routineModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Add Routine Item</h3>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Day
+                    of the Week</label>
+                <select id="routineDay" style="margin:0;">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="0">Sunday</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Start
+                    Time</label>
+                <input type="time" id="routineTime" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    / Subject</label>
+                <select id="routineSubjectSelect" onchange="onSubjectSelect()" style="margin:0;"></select>
+            </div>
+
+            <input type="text" id="routineNameCustom" placeholder="Custom Class/Activity Name" class="hidden"
+                style="margin-bottom:12px;">
+
+            <div id="routineInjectedData" class="hidden"
+                style="margin-bottom:15px; font-size:0.85rem; color:var(--primary); font-weight:600; background:var(--primary-soft); padding:8px; border-radius:8px;">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Session
+                    Type</label>
+                <select id="routineType" style="margin:0;">
+                    <option value="Class">Class</option>
+                    <option value="Self-Study">Self-Study</option>
+                </select>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('routineModal')" class="btn">Cancel</button>
+                <button onclick="addRoutine()" class="btn btn-primary">Save Routine</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editRoutineModal" class="modal">
+        <div class="modal-content">
+            <div class="list-header">
+                <h3>Edit Routine Item</h3>
+            </div>
+
+            <input type="hidden" id="editRoutineIndex">
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Day
+                    of the Week</label>
+                <select id="editRoutineDay" style="margin:0;">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="0">Sunday</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Start
+                    Time</label>
+                <input type="time" id="editRoutineTime" style="margin:0;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Course
+                    / Subject</label>
+                <select id="editRoutineSubjectSelect" onchange="onEditRoutineSubjectSelect()"
+                    style="margin:0;"></select>
+            </div>
+
+            <input type="text" id="editRoutineNameCustom" placeholder="Custom Class/Activity Name" class="hidden"
+                style="margin-bottom:12px;">
+
+            <div id="editRoutineInjectedData" class="hidden"
+                style="margin-bottom:15px; font-size:0.85rem; color:var(--primary); font-weight:600; background:var(--primary-soft); padding:8px; border-radius:8px;">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label
+                    style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Session
+                    Type</label>
+                <select id="editRoutineType" style="margin:0;">
+                    <option value="Class">Class</option>
+                    <option value="Self-Study">Self-Study</option>
+                </select>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeModal('editRoutineModal')" class="btn">Cancel</button>
+                <button onclick="saveEditRoutine()" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ACCENT_PRESETS = [
+            { name: 'Crimson Red', color: '#dc2626' },
+            { name: 'Indigo', color: '#6366f1' },
+            { name: 'Ocean Blue', color: '#0ea5e9' },
+            { name: 'Emerald', color: '#10b981' },
+            { name: 'Amber', color: '#f59e0b' },
+            { name: 'Rose', color: '#f43f5e' },
+            { name: 'Violet', color: '#8b5cf6' }
+        ];
+
+        function createInitialData() {
+            const initSemId = 'sem_1';
+            return {
+                semesters: [
+                    {
+                        id: initSemId,
+                        name: 'Semester 1',
+                        startDate: '',
+                        endDate: '',
+                        tasks: [],
+                        subjects: [],
+                        routine: [],
+                        holidays: []
+                    }
+                ],
+                currentSemesterId: initSemId,
+                settings: { darkMode: true, accentColor: '#dc2626', syncId: '', lastSync: null }
+            };
+        }
+
+        function normalizeAppData(raw) {
+            if (!raw || typeof raw !== 'object') {
+                return createInitialData();
+            }
+
+            const settings = Object.assign(
+                { darkMode: true, accentColor: '#dc2626', syncId: '', lastSync: null },
+                raw.settings || {}
+            );
+
+            if (!Array.isArray(raw.semesters) || raw.semesters.length === 0) {
+                const migratedId = 'sem_' + Date.now();
+                return {
+                    semesters: [
+                        {
+                            id: migratedId,
+                            name: 'Semester 1',
+                            startDate: '',
+                            endDate: '',
+                            tasks: Array.isArray(raw.tasks) ? raw.tasks : [],
+                            subjects: Array.isArray(raw.subjects) ? raw.subjects : [],
+                            routine: Array.isArray(raw.routine) ? raw.routine : [],
+                            holidays: Array.isArray(raw.holidays) ? raw.holidays : []
+                        }
+                    ],
+                    currentSemesterId: migratedId,
+                    settings: settings
+                };
+            }
+
+            const normalizedSemesters = raw.semesters.map((sem, idx) => ({
+                id: sem.id || ('sem_' + Date.now() + '_' + idx),
+                name: sem.name || ('Semester ' + (idx + 1)),
+                startDate: sem.startDate || '',
+                endDate: sem.endDate || '',
+                tasks: Array.isArray(sem.tasks) ? sem.tasks : [],
+                subjects: Array.isArray(sem.subjects) ? sem.subjects : [],
+                routine: Array.isArray(sem.routine) ? sem.routine : [],
+                holidays: Array.isArray(sem.holidays) ? sem.holidays.map((h, hIdx) => ({
+                    id: h.id || ('hol_' + Date.now() + '_' + hIdx),
+                    name: typeof h.name === 'string' ? h.name.trim() : '',
+                    startDate: h.startDate || '',
+                    endDate: h.endDate || h.startDate || ''
+                })).filter(h => h.startDate) : []
+            }));
+
+            let currentId = raw.currentSemesterId;
+            if (!normalizedSemesters.some(s => s.id === currentId)) {
+                currentId = normalizedSemesters[0].id;
+            }
+
+            return {
+                semesters: normalizedSemesters,
+                currentSemesterId: currentId,
+                settings: settings
+            };
+        }
+
+        let appData = normalizeAppData(JSON.parse(localStorage.getItem('studyFlowData')));
+        let pendingImportData = null;
+
+        function getActiveSemester() {
+            let sem = appData.semesters.find(s => s.id === appData.currentSemesterId);
+            if (!sem) {
+                sem = appData.semesters[0];
+                appData.currentSemesterId = sem.id;
+            }
+            if (!Array.isArray(sem.holidays)) {
+                sem.holidays = [];
+            }
+            return sem;
+        }
+
+        function bindActiveSemesterProxies(target) {
+            ['tasks', 'subjects', 'routine', 'holidays'].forEach(prop => {
+                Object.defineProperty(target, prop, {
+                    get() {
+                        return getActiveSemester()[prop];
+                    },
+                    set(val) {
+                        getActiveSemester()[prop] = val;
+                    },
+                    enumerable: false,
+                    configurable: true
+                });
+            });
+        }
+
+        bindActiveSemesterProxies(appData);
+
+        let timerInterval;
+        let timerDuration = 25 * 60;
+        let timeLeft = timerDuration;
+        let isTimerRunning = false;
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        let tempSubtasks = [];
+        let holidayMode = 'single';
+
+        function hexToRgba(hex, alpha) {
+            let c = (hex || '#dc2626').replace('#', '').trim();
+            if (c.length === 3) {
+                c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+            }
+            const num = parseInt(c, 16);
+            if (isNaN(num)) {
+                return `rgba(220, 38, 38, ${alpha})`;
+            }
+            const r = (num >> 16) & 255;
+            const g = (num >> 8) & 255;
+            const b = num & 255;
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function applyAccentColor(color) {
+            const hex = color || '#dc2626';
+            document.documentElement.style.setProperty('--primary', hex);
+            document.documentElement.style.setProperty('--primary-glow', hexToRgba(hex, 0.3));
+            document.documentElement.style.setProperty('--primary-soft', hexToRgba(hex, 0.14));
+            document.documentElement.style.setProperty('--primary-hover', hexToRgba(hex, 0.07));
+        }
+
+        function setAccentColor(color) {
+            if (!color) {
+                return;
+            }
+            appData.settings.accentColor = color;
+            applyAccentColor(color);
+            saveData();
+        }
+
+        function getLocalDateStr(d = new Date()) {
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function getHolidayForDate(dateStr) {
+            const holidays = appData.holidays || [];
+            return holidays.find(h => dateStr >= h.startDate && dateStr <= (h.endDate || h.startDate)) || null;
+        }
+
+        function getHolidayDisplayName(holiday) {
+            if (!holiday) {
+                return '';
+            }
+            return (holiday.name && holiday.name.trim() !== '') ? holiday.name.trim() : 'Day Off';
+        }
+
+        function getExamsForDate(dateStr) {
+            const results = [];
+            (appData.tasks || []).forEach((t, idx) => {
+                if (t.type === 'Exam' && t.date === dateStr) {
+                    results.push({ task: t, index: idx });
+                }
+            });
+            results.sort((a, b) => (a.task.time || '23:59').localeCompare(b.task.time || '23:59'));
+            return results;
+        }
+
+        function init() {
+            if (appData.settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+            applyAccentColor(appData.settings.accentColor || '#dc2626');
+            saveData();
+            checkReminders();
+            startNotificationEngine();
+        }
+
+        function saveData() {
+            localStorage.setItem('studyFlowData', JSON.stringify(appData));
+            renderAll();
+        }
+
+        function renderAll() {
+            renderHeaderSemesterSelect();
+            renderDashboard();
+            renderTasks();
+            renderCourses();
+            renderAttendance();
+            renderRoutine();
+            renderCalendar();
+            if (!document.getElementById('settings').classList.contains('hidden')) {
+                renderSettings();
+            }
+        }
+
+        function renderHeaderSemesterSelect() {
+            const select = document.getElementById('headerSemesterSelect');
+            if (!select) {
+                return;
+            }
+            select.innerHTML = '';
+            appData.semesters.forEach(sem => {
+                const opt = document.createElement('option');
+                opt.value = sem.id;
+                opt.textContent = sem.name;
+                if (sem.id === appData.currentSemesterId) {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            });
+        }
+
+        function switchSemester(semId) {
+            if (appData.semesters.some(s => s.id === semId)) {
+                appData.currentSemesterId = semId;
+                saveData();
+            }
+        }
+
+        function openSemesterModal() {
+            document.getElementById('semName').value = '';
+            document.getElementById('semStartDate').value = '';
+            document.getElementById('semEndDate').value = '';
+            openModal('semesterModal');
+        }
+
+        function addSemester() {
+            const name = document.getElementById('semName').value.trim();
+            const startDate = document.getElementById('semStartDate').value;
+            const endDate = document.getElementById('semEndDate').value;
+
+            if (!name) {
+                return alert('Please enter a semester name.');
+            }
+            if (startDate && endDate && endDate < startDate) {
+                return alert('End date cannot be earlier than start date.');
+            }
+
+            const newId = 'sem_' + Date.now();
+            appData.semesters.push({
+                id: newId,
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                tasks: [],
+                subjects: [],
+                routine: [],
+                holidays: []
+            });
+
+            appData.currentSemesterId = newId;
+            closeModal('semesterModal');
+            saveData();
+        }
+
+        function openEditSemesterModal(semId) {
+            const sem = appData.semesters.find(s => s.id === semId);
+            if (!sem) {
+                return;
+            }
+            document.getElementById('editSemId').value = sem.id;
+            document.getElementById('editSemName').value = sem.name;
+            document.getElementById('editSemStartDate').value = sem.startDate || '';
+            document.getElementById('editSemEndDate').value = sem.endDate || '';
+            openModal('editSemesterModal');
+        }
+
+        function saveEditSemester() {
+            const semId = document.getElementById('editSemId').value;
+            const name = document.getElementById('editSemName').value.trim();
+            const startDate = document.getElementById('editSemStartDate').value;
+            const endDate = document.getElementById('editSemEndDate').value;
+
+            if (!name) {
+                return alert('Please enter a semester name.');
+            }
+            if (startDate && endDate && endDate < startDate) {
+                return alert('End date cannot be earlier than start date.');
+            }
+
+            const sem = appData.semesters.find(s => s.id === semId);
+            if (sem) {
+                sem.name = name;
+                sem.startDate = startDate;
+                sem.endDate = endDate;
+            }
+
+            closeModal('editSemesterModal');
+            saveData();
+        }
+
+        function deleteSemester(semId) {
+            if (appData.semesters.length <= 1) {
+                return alert("You cannot delete the only remaining semester. Use 'Reset Current Semester' in the Danger Zone to clear its data.");
+            }
+
+            const sem = appData.semesters.find(s => s.id === semId);
+            if (!sem) {
+                return;
+            }
+
+            if (confirm(`Delete "${sem.name}" and all of its courses, tasks, holidays, and routines?`)) {
+                appData.semesters = appData.semesters.filter(s => s.id !== semId);
+                if (appData.currentSemesterId === semId) {
+                    appData.currentSemesterId = appData.semesters[0].id;
+                }
+                saveData();
+            }
+        }
+
+        function resetCurrentSemester() {
+            const activeSem = getActiveSemester();
+            if (confirm(`Are you sure you want to reset all courses, assignments, attendance, holidays, and routines in "${activeSem.name}"? Other semesters will not be affected.`)) {
+                activeSem.tasks = [];
+                activeSem.subjects = [];
+                activeSem.routine = [];
+                activeSem.holidays = [];
+                saveData();
+            }
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const titles = {
+                'dashboard': 'Dashboard',
+                'tasks': 'Assignments',
+                'courses': 'Courses',
+                'attendance': 'Attendance',
+                'routine': 'Routine',
+                'calendar': 'Calendar',
+                'timer': 'Focus Timer',
+                'settings': 'Settings'
+            };
+
+            document.getElementById('page-title').innerText = titles[tabId];
+
+            document.querySelectorAll('nav button').forEach(b => {
+                b.classList.remove('active');
+            });
+
+            document.getElementById('nav-' + tabId).classList.add('active');
+
+            if (tabId === 'calendar') {
+                renderCalendar();
+            }
+            if (tabId === 'settings') {
+                renderSettings();
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            appData.settings.darkMode = document.body.classList.contains('dark-mode');
+            saveData();
+        }
+
+        function getContrastYIQ(hexcolor) {
+            if (!hexcolor) {
+                return 'black';
+            }
+
+            hexcolor = hexcolor.replace("#", "");
+            let r = parseInt(hexcolor.substr(0, 2), 16);
+            let g = parseInt(hexcolor.substr(2, 2), 16);
+            let b = parseInt(hexcolor.substr(4, 2), 16);
+            let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+            return (yiq >= 128) ? 'black' : 'white';
+        }
+
+        function formatTimeAMPM(time24) {
+            if (!time24) {
+                return "";
+            }
+            const parts = time24.split(':');
+            let h = parseInt(parts[0]);
+            let m = parts[1];
+            let ampm = h >= 12 ? 'PM' : 'AM';
+
+            h = h % 12;
+            if (h === 0) {
+                h = 12;
+            }
+
+            return h + ':' + m + ' ' + ampm;
+        }
+
+        function formatDateCustom(dateStr) {
+            if (!dateStr) {
+                return "No Deadline";
+            }
+
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+            const parts = dateStr.split('-');
+
+            if (parts.length !== 3) {
+                return dateStr;
+            }
+
+            let y = parts[0];
+            let m = parseInt(parts[1]) - 1;
+            let d = parseInt(parts[2]);
+
+            return d + ' ' + months[m] + ' ' + y;
+        }
+
+        function renderDashboard() {
+            const pending = appData.tasks.filter(t => !t.completed).length;
+            document.getElementById('dash-pending').innerText = pending;
+
+            let totalClasses = 0;
+            let attendedClasses = 0;
+
+            appData.subjects.forEach(s => {
+                totalClasses += s.total;
+                attendedClasses += s.present;
+            });
+
+            const attPct = totalClasses === 0 ? 100 : Math.ceil((attendedClasses / totalClasses) * 100);
+            document.getElementById('dash-attendance').innerText = attPct + "%";
+            document.getElementById('dash-attendance').style.color = attPct < 75 ? 'var(--danger-red)' : '#10b981';
+
+            const todayStr = getLocalDateStr();
+            const todayExams = getExamsForDate(todayStr).filter(e => !e.task.completed);
+            const todayHoliday = getHolidayForDate(todayStr);
+
+            const todayDay = new Date().getDay();
+            const todayRoutine = appData.routine.filter(r => parseInt(r.day) === todayDay);
+
+            const schedList = document.getElementById('dash-schedule-list');
+            schedList.innerHTML = '';
+
+            // Priority 1: Exams override both Holidays and regular daily classes
+            if (todayExams.length > 0) {
+                document.getElementById('dash-classes').innerText = 0;
+                todayExams.forEach(({ task, index }) => {
+                    const metaParts = [];
+                    if (task.subject) {
+                        metaParts.push(task.subject);
+                    }
+                    if (task.time) {
+                        metaParts.push(formatTimeAMPM(task.time));
+                    }
+                    if (task.room) {
+                        metaParts.push(task.room);
+                    }
+                    const metaStr = metaParts.length > 0 ? metaParts.join(' • ') : 'Exam Today • Regular classes suspended';
+
+                    schedList.innerHTML += `
+                    <div class="dash-exam-banner" onclick="openEditTaskModal(${index})" title="Click to view/edit Exam">
+                        <div>
+                            <div style="font-weight:800; font-size:0.98rem; color:var(--exam-red); display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-file-signature"></i> ${task.title}
+                            </div>
+                            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px; font-weight:600;">
+                                ${metaStr}
+                            </div>
+                        </div>
+                        <span class="badge badge-exam">EXAM</span>
+                    </div>`;
+                });
+            }
+            // Priority 2: Holiday / Day Off overrides regular daily classes
+            else if (todayHoliday) {
+                document.getElementById('dash-classes').innerText = 0;
+                const holidayLabel = getHolidayDisplayName(todayHoliday);
+                const isRange = todayHoliday.endDate && todayHoliday.endDate !== todayHoliday.startDate;
+                const dateSub = isRange
+                    ? `${formatDateCustom(todayHoliday.startDate)} – ${formatDateCustom(todayHoliday.endDate)}`
+                    : formatDateCustom(todayHoliday.startDate);
+
+                schedList.innerHTML = `
+                <div class="dash-holiday-banner" onclick="showTab('calendar')" title="View in Calendar">
+                    <div>
+                        <div style="font-weight:800; font-size:1rem; color:var(--holiday-blue); display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-umbrella-beach"></i> ${holidayLabel}
+                        </div>
+                        <div style="font-size:0.83rem; color:var(--text-muted); margin-top:5px; font-weight:600;">
+                            No classes scheduled • ${dateSub}
+                        </div>
+                    </div>
+                    <span class="badge badge-holiday"><i class="fas fa-calendar-alt"></i></span>
+                </div>`;
+            }
+            // Priority 3: Standard daily class routine
+            else {
+                document.getElementById('dash-classes').innerText = todayRoutine.length;
+
+                if (todayRoutine.length === 0) {
+                    schedList.innerHTML = '<div style="padding:15px; opacity:0.6;">No classes today.</div>';
+                }
+                else {
+                    todayRoutine.sort((a, b) => a.time.localeCompare(b.time)).forEach(r => {
+                        const timeStr = formatTimeAMPM(r.time);
+                        const schedBorderColor = r.color && r.color !== '#64748b' ? r.color : 'var(--border)';
+                        schedList.innerHTML += `
+                        <div class="list-item" onclick="showTab('routine')" style="cursor:pointer; border-left: 4px solid ${schedBorderColor}; padding-left: 14px;" title="Go to Routine">
+                            <div>
+                                <div style="font-weight:700">${r.name}</div>
+                                <div style="font-size:0.8rem; opacity:0.7">${timeStr} • ${r.type}</div>
+                            </div>
+                            <span class="badge badge-gray"><i class="fas fa-chevron-right"></i></span>
+                        </div>`;
+                    });
+                }
+            }
+
+            const deadList = document.getElementById('dash-deadline-list');
+            deadList.innerHTML = '';
+
+            const deadlines = appData.tasks.filter(t => !t.completed && t.date).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
+
+            if (deadlines.length === 0) {
+                deadList.innerHTML = '<div style="padding:15px; opacity:0.6;">No upcoming deadlines.</div>';
+            }
+
+            deadlines.forEach(t => {
+                const dateDisplay = formatDateCustom(t.date);
+                const isExam = t.type === 'Exam';
+                const deadSubj = appData.subjects.find(s => s.name === t.subject);
+                const deadBorderColor = deadSubj && deadSubj.color ? deadSubj.color : 'var(--border)';
+                const badgeClass = isExam ? 'badge-exam' : 'badge-red';
+                const timeAddon = (isExam && t.time) ? ` • ${formatTimeAMPM(t.time)}` : '';
+
+                deadList.innerHTML += `
+                <div class="list-item" onclick="showTab('tasks')" style="cursor:pointer; border-left: 4px solid ${deadBorderColor}; padding-left: 14px;" title="Go to Assignments">
+                    <div>
+                        <div style="font-weight:600">${t.title}</div>
+                        <div style="font-size:0.8rem; color:${isExam ? 'var(--exam-red)' : 'var(--primary)'}; font-weight:700">Due: ${dateDisplay}${timeAddon}</div>
+                    </div>
+                    <span class="badge ${badgeClass}">${t.type}</span>
+                </div>`;
+            });
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('tasks-list');
+            list.innerHTML = '';
+            appData.tasks.forEach((t, index) => {
+                const dateDisplay = t.date ? formatDateCustom(t.date) : "No Deadline";
+                const isExam = t.type === 'Exam';
+
+                let subjectBadge = '';
+                if (t.subject) {
+                    let badgeBg = 'rgba(100, 116, 139, 0.1)';
+                    let badgeColor = 'var(--text-muted)';
+                    const subj = appData.subjects.find(s => s.name === t.subject);
+
+                    if (subj && subj.color) {
+                        badgeBg = subj.color;
+                        badgeColor = getContrastYIQ(subj.color);
+                    }
+
+                    subjectBadge = `<span class="badge" style="background-color: ${badgeBg}; color: ${badgeColor}; margin-right:8px">${t.subject}</span>`;
+                }
+
+                const examBadge = isExam
+                    ? `<span class="badge badge-exam" style="margin-right:8px;"><i class="fas fa-file-signature"></i> EXAM</span>`
+                    : '';
+
+                const examMeta = (isExam && (t.time || t.room))
+                    ? ` • ${t.time ? formatTimeAMPM(t.time) : ''}${t.time && t.room ? ' | ' : ''}${t.room ? t.room : ''}`
+                    : '';
+
+                const descHtml = t.description ? `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">${t.description}</div>` : '';
+
+                let subtasksHtml = '';
+                if (t.subtasks && t.subtasks.length > 0) {
+                    subtasksHtml = `<div style="margin-top:12px; padding-left:35px; display:flex; flex-direction:column; gap:8px;">`;
+                    t.subtasks.forEach((st, stIndex) => {
+                        subtasksHtml += `
+                        <div style="display:flex; align-items:center; gap:10px; opacity: ${st.completed ? 0.5 : 1}">
+                            <div onclick="toggleSubtask(${index}, ${stIndex})" style="cursor:pointer; width:16px; height:16px; border:2px solid var(--border); border-radius:4px; background:${st.completed ? 'var(--primary)' : 'transparent'}; display:flex; align-items:center; justify-content:center;">
+                                ${st.completed ? '<i class="fas fa-check" style="color:white; font-size:8px"></i>' : ''}
+                            </div>
+                            <span style="font-size:0.85rem; font-weight:600; ${st.completed ? 'text-decoration:line-through' : ''}">${st.title}</span>
+                        </div>
+                    `;
+                    });
+                    subtasksHtml += `</div>`;
+                }
+
+                list.innerHTML += `
+                <div class="list-item" style="flex-direction:column; align-items:flex-start; opacity: ${t.completed ? 0.5 : 1}; ${isExam ? 'border-left: 4px solid var(--exam-red); padding-left: 14px;' : ''}">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <div style="display:flex; align-items:flex-start; gap:15px;">
+                            <div onclick="toggleTask(${index})" style="cursor:pointer; width:20px; height:20px; border:2px solid ${isExam ? 'var(--exam-red)' : 'var(--border)'}; border-radius:6px; background:${t.completed ? (isExam ? 'var(--exam-red)' : 'var(--primary)') : 'transparent'}; display:flex; align-items:center; justify-content:center; margin-top:2px;">
+                                ${t.completed ? '<i class="fas fa-check" style="color:white; font-size:10px"></i>' : ''}
+                            </div>
+                            <div>
+                                <div style="font-weight:700; ${isExam ? 'color:var(--exam-red);' : ''} ${t.completed ? 'text-decoration:line-through' : ''}">${t.title}</div>
+                                <div style="font-size:0.8rem; opacity:0.8; margin-top:4px;">
+                                    ${examBadge}${subjectBadge}
+                                    ${t.type} • ${dateDisplay}${examMeta}
+                                    ${t.file ? `• <i class="fas fa-paperclip"></i> ${t.file}` : ''}
+                                </div>
+                                ${descHtml}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="openEditTaskModal(${index})" class="btn" style="padding:5px 10px; border:none; color:var(--text-muted)"><i class="fas fa-pen"></i></button>
+                            <button onclick="deleteTask(${index})" class="btn" style="padding:5px 10px; border:none; color:var(--text-muted)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    ${subtasksHtml}
+                </div>`;
+            });
+        }
+
+        function onTaskTypeChange(mode) {
+            if (mode === 'add') {
+                const typeVal = document.getElementById('taskType').value;
+                const examFields = document.getElementById('taskExamFields');
+                const heading = document.getElementById('taskModalHeading');
+                const dateLabel = document.getElementById('taskDateLabel');
+
+                if (typeVal === 'Exam') {
+                    examFields.classList.remove('hidden');
+                    heading.innerHTML = '<i class="fas fa-file-signature" style="color:var(--exam-red)"></i> Schedule Exam';
+                    dateLabel.innerText = 'Exam Date';
+                }
+                else {
+                    examFields.classList.add('hidden');
+                    heading.innerText = 'Add Task';
+                    dateLabel.innerText = 'Deadline (Optional)';
+                }
+            }
+            else {
+                const typeVal = document.getElementById('editTaskType').value;
+                const examFields = document.getElementById('editTaskExamFields');
+                const heading = document.getElementById('editTaskModalHeading');
+                const dateLabel = document.getElementById('editTaskDateLabel');
+
+                if (typeVal === 'Exam') {
+                    examFields.classList.remove('hidden');
+                    heading.innerHTML = '<i class="fas fa-file-signature" style="color:var(--exam-red)"></i> Edit Exam';
+                    dateLabel.innerText = 'Exam Date';
+                }
+                else {
+                    examFields.classList.add('hidden');
+                    heading.innerText = 'Edit Task';
+                    dateLabel.innerText = 'Deadline (Optional)';
+                }
+            }
+        }
+
+        function addTempSubtask(inputId, containerId) {
+            const title = document.getElementById(inputId).value;
+            if (!title) {
+                return;
+            }
+
+            tempSubtasks.push({ title: title, completed: false });
+            document.getElementById(inputId).value = '';
+            renderTempSubtasks(containerId);
+        }
+
+        function removeTempSubtask(index, containerId) {
+            tempSubtasks.splice(index, 1);
+            renderTempSubtasks(containerId);
+        }
+
+        function renderTempSubtasks(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            tempSubtasks.forEach((st, i) => {
+                container.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:6px 12px; border-radius:6px; margin-bottom:6px; font-size:0.85rem;">
+                    <span>${st.title}</span>
+                    <button onclick="removeTempSubtask(${i}, '${containerId}')" style="background:none; border:none; color:var(--primary); cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            });
+        }
+
+        function openTaskModal(defaultType = 'Assignment', defaultDate = '') {
+            const select = document.getElementById('taskSubject');
+            select.innerHTML = '<option value="">None / General</option>';
+
+            appData.subjects.forEach(s => {
+                select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDesc').value = '';
+            document.getElementById('taskType').value = defaultType || 'Assignment';
+            document.getElementById('taskDate').value = defaultDate || '';
+            document.getElementById('taskTime').value = '';
+            document.getElementById('taskRoom').value = '';
+            document.getElementById('taskSubject').value = '';
+
+            onTaskTypeChange('add');
+
+            tempSubtasks = [];
+            renderTempSubtasks('taskSubtasksList');
+
+            openModal('taskModal');
+        }
+
+        function addTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const desc = document.getElementById('taskDesc').value.trim();
+            const type = document.getElementById('taskType').value;
+            const date = document.getElementById('taskDate').value;
+            const time = type === 'Exam' ? document.getElementById('taskTime').value : '';
+            const room = type === 'Exam' ? document.getElementById('taskRoom').value.trim() : '';
+            const subject = document.getElementById('taskSubject').value;
+            const fileInput = document.getElementById('taskFile');
+            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+            if (!title) {
+                return alert('Please enter a title.');
+            }
+            if (type === 'Exam' && !date) {
+                return alert('Please select a date for the exam.');
+            }
+
+            appData.tasks.push({
+                title,
+                description: desc,
+                type,
+                date,
+                time,
+                room,
+                subject,
+                subtasks: [...tempSubtasks],
+                file: fileName,
+                completed: false
+            });
+            closeModal('taskModal');
+            saveData();
+        }
+
+        function openEditTaskModal(index) {
+            const task = appData.tasks[index];
+            if (!task) {
+                return;
+            }
+            document.getElementById('editTaskIndex').value = index;
+            document.getElementById('editTaskTitle').value = task.title;
+            document.getElementById('editTaskDesc').value = task.description || '';
+            document.getElementById('editTaskType').value = task.type || 'Assignment';
+            document.getElementById('editTaskDate').value = task.date || '';
+            document.getElementById('editTaskTime').value = task.time || '';
+            document.getElementById('editTaskRoom').value = task.room || '';
+
+            const select = document.getElementById('editTaskSubject');
+            select.innerHTML = '<option value="">None / General</option>';
+            appData.subjects.forEach(s => {
+                select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+            select.value = task.subject || '';
+
+            onTaskTypeChange('edit');
+
+            tempSubtasks = task.subtasks ? JSON.parse(JSON.stringify(task.subtasks)) : [];
+            renderTempSubtasks('editTaskSubtasksList');
+
+            openModal('editTaskModal');
+        }
+
+        function saveEditTask() {
+            const index = document.getElementById('editTaskIndex').value;
+            const title = document.getElementById('editTaskTitle').value.trim();
+            const desc = document.getElementById('editTaskDesc').value.trim();
+            const type = document.getElementById('editTaskType').value;
+            const date = document.getElementById('editTaskDate').value;
+            const time = type === 'Exam' ? document.getElementById('editTaskTime').value : '';
+            const room = type === 'Exam' ? document.getElementById('editTaskRoom').value.trim() : '';
+            const subject = document.getElementById('editTaskSubject').value;
+
+            if (!title) {
+                return alert('Please enter a title.');
+            }
+            if (type === 'Exam' && !date) {
+                return alert('Please select a date for the exam.');
+            }
+
+            appData.tasks[index].title = title;
+            appData.tasks[index].description = desc;
+            appData.tasks[index].type = type;
+            appData.tasks[index].date = date;
+            appData.tasks[index].time = time;
+            appData.tasks[index].room = room;
+            appData.tasks[index].subject = subject;
+            appData.tasks[index].subtasks = [...tempSubtasks];
+
+            closeModal('editTaskModal');
+            saveData();
+        }
+
+        function toggleTask(i) {
+            appData.tasks[i].completed = !appData.tasks[i].completed;
+            saveData();
+        }
+
+        function toggleSubtask(tIndex, stIndex) {
+            appData.tasks[tIndex].subtasks[stIndex].completed = !appData.tasks[tIndex].subtasks[stIndex].completed;
+            saveData();
+        }
+
+        function deleteTask(i) {
+            if (confirm('Delete item?')) {
+                appData.tasks.splice(i, 1);
+                saveData();
+                if (document.getElementById('dayActionModal').classList.contains('open')) {
+                    const selDate = document.getElementById('selectedCalendarDate').value;
+                    if (selDate) {
+                        renderDayActionExisting(selDate);
+                    }
+                }
+            }
+        }
+
+        function renderCourses() {
+            const list = document.getElementById('courses-list');
+            if (!list) {
+                return;
+            }
+
+            list.innerHTML = '';
+            appData.subjects.forEach((s, index) => {
+                list.innerHTML += `
+                <div class="card" style="padding:20px; border-left: 5px solid ${s.color || 'var(--primary)'}">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                        <h3 style="font-size:1.1rem; margin:0;">${s.name}</h3>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="openEditSubjectModal(${index})" class="btn" style="padding: 5px 10px; opacity:0.8"><i class="fas fa-pen"></i></button>
+                            <button onclick="delSub(${index})" class="btn" style="padding: 5px 10px; opacity:0.5"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">
+                        <div><i class="fas fa-user"></i> ${s.prof || 'No Professor'}</div>
+                        <div style="margin-top:5px;"><i class="fas fa-door-open"></i> ${s.room || 'No Room'}</div>
+                        <div style="margin-top:5px;"><i class="fas fa-clock"></i> ${s.duration || 60} mins</div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function renderAttendance() {
+            const list = document.getElementById('attendance-list');
+            if (!list) {
+                return;
+            }
+
+            list.innerHTML = '';
+            appData.subjects.forEach((s, index) => {
+                const pct = s.total === 0 ? 100 : Math.ceil((s.present / s.total) * 100);
+                // Always use dedicated red (#ef4444) when below 75%, never the theme accent colour
+                const color = pct < 75 ? 'var(--danger-red)' : '#10b981';
+
+                let bunkStatusHtml = '';
+                if (s.total === 0) {
+                    bunkStatusHtml = `
+                    <div style="margin-top:10px; font-size:0.8rem; color:var(--text-muted); opacity:0.75;">
+                        No classes recorded yet (75% min limit)
+                    </div>`;
+                }
+                else {
+                    const rawRatio = s.present / s.total;
+                    if (rawRatio >= 0.75) {
+                        const safeAbsences = Math.floor((s.present / 0.75) - s.total);
+                        if (safeAbsences > 0) {
+                            bunkStatusHtml = `
+                            <div style="margin-top:10px; font-size:0.8rem; color:var(--text-muted); opacity:0.85;">
+                                Safe to miss: <b>${safeAbsences}</b> ${safeAbsences === 1 ? 'class' : 'classes'}
+                            </div>`;
+                        }
+                        else {
+                            // 0 safe absences: highlighted like the Below 75% tag, but more muted and in red
+                            bunkStatusHtml = `
+                            <div class="att-alert-muted-red">
+                                <i class="fas fa-exclamation-circle"></i> Safe to miss: <b>0</b> classes (on the 75% limit)
+                            </div>`;
+                        }
+                    }
+                    else {
+                        const classesNeeded = Math.ceil((0.75 * s.total - s.present) / 0.25);
+                        bunkStatusHtml = `
+                        <div class="att-alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> Below 75% • Attend next <b>${classesNeeded}</b> ${classesNeeded === 1 ? 'class' : 'classes'}
+                        </div>`;
+                    }
+                }
+
+                list.innerHTML += `
+                <div class="card" style="padding:20px; border-left: 5px solid ${s.color || 'var(--primary)'};">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-size:1.1rem">${s.name}</h3>
+                        <span style="font-weight:800; font-size:1.2rem; color:${color}">${pct}%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width:${pct}%; background-color:${color}"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:0.9rem; color:var(--text-muted)">
+                        <span>Present: <b>${s.present}</b></span>
+                        <span style="color:var(--danger-red)">Absent: <b>${s.total - s.present}</b></span>
+                        <span>Total: <b>${s.total}</b></span>
+                    </div>
+                    ${bunkStatusHtml}
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="markAtt(${index}, 1)" class="btn" style="flex:1; border-color:#10b981; color:#10b981"><i class="fas fa-check"></i> Mark Present</button>
+                        <button onclick="markAtt(${index}, 0)" class="btn" style="flex:1; border-color:var(--danger-red); color:var(--danger-red)"><i class="fas fa-times"></i> Mark Absent</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function addSubject() {
+            const name = document.getElementById('subjectName').value;
+            const prof = document.getElementById('subjectProf').value;
+            const room = document.getElementById('subjectRoom').value;
+            const color = document.getElementById('subjectColor').value;
+            const duration = parseInt(document.getElementById('subjectDuration').value) || 60;
+
+            if (!name) {
+                return;
+            }
+
+            appData.subjects.push({ name, present: 0, total: 0, prof, room, color, duration });
+
+            closeModal('subjectModal');
+            saveData();
+
+            document.getElementById('subjectName').value = '';
+            document.getElementById('subjectProf').value = '';
+            document.getElementById('subjectRoom').value = '';
+            document.getElementById('subjectColor').value = appData.settings.accentColor || '#dc2626';
+            document.getElementById('subjectDuration').value = '';
+        }
+
+        function markAtt(i, p) {
+            appData.subjects[i].total++;
+            if (p) {
+                appData.subjects[i].present++;
+            }
+            saveData();
+        }
+
+        function delSub(i) {
+            if (confirm('Delete subject?')) {
+                appData.subjects.splice(i, 1);
+                saveData();
+            }
+        }
+
+        function openEditSubjectModal(index) {
+            const subject = appData.subjects[index];
+            document.getElementById('editSubjectIndex').value = index;
+            document.getElementById('editSubjectOldName').value = subject.name;
+
+            document.getElementById('editSubjectName').value = subject.name;
+            document.getElementById('editSubjectProf').value = subject.prof || '';
+            document.getElementById('editSubjectRoom').value = subject.room || '';
+            document.getElementById('editSubjectColor').value = subject.color || '#dc2626';
+            document.getElementById('editSubjectDuration').value = subject.duration || 60;
+
+            openModal('editSubjectModal');
+        }
+
+        function saveEditSubject() {
+            const index = document.getElementById('editSubjectIndex').value;
+            const oldName = document.getElementById('editSubjectOldName').value;
+
+            const newName = document.getElementById('editSubjectName').value;
+            const newProf = document.getElementById('editSubjectProf').value;
+            const newRoom = document.getElementById('editSubjectRoom').value;
+            const newColor = document.getElementById('editSubjectColor').value;
+            const newDuration = parseInt(document.getElementById('editSubjectDuration').value) || 60;
+
+            if (!newName) {
+                return;
+            }
+
+            appData.subjects[index].name = newName;
+            appData.subjects[index].prof = newProf;
+            appData.subjects[index].room = newRoom;
+            appData.subjects[index].color = newColor;
+            appData.subjects[index].duration = newDuration;
+
+            appData.routine.forEach(r => {
+                if (r.name === oldName) {
+                    r.name = newName;
+                    r.prof = newProf;
+                    r.room = newRoom;
+                    r.color = newColor;
+                    r.duration = newDuration;
+                }
+            });
+
+            closeModal('editSubjectModal');
+            saveData();
+        }
+
+        function delRoutine(index) {
+            if (confirm('Delete session?')) {
+                appData.routine.splice(index, 1);
+                saveData();
+            }
+        }
+
+        function renderRoutine() {
+            const container = document.getElementById('routine-timetable');
+            if (!container) {
+                return;
+            }
+
+            container.innerHTML = '';
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const dayMap = [1, 2, 3, 4, 5, 6, 0];
+
+            container.innerHTML += `<div class="tt-head"></div>`;
+            for (let i = 0; i < 7; i++) {
+                container.innerHTML += `<div class="tt-head">${days[i]}</div>`;
+            }
+
+            for (let hour = 8; hour <= 18; hour++) {
+                const ampm = hour >= 12 ? 'pm' : 'am';
+                const h12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+                container.innerHTML += `<div class="tt-time">${h12} ${ampm}</div>`;
+
+                for (let d = 0; d < 7; d++) {
+                    const dayIndex = dayMap[d];
+                    const cellId = `cell-${dayIndex}-${hour}`;
+                    container.innerHTML += `<div class="tt-cell" id="${cellId}" onclick="openRoutineModalWithTime(${dayIndex}, ${hour})"></div>`;
+                }
+            }
+
+            appData.routine.forEach((r, index) => {
+                const timeParts = r.time.split(':');
+                let hour = parseInt(timeParts[0]);
+                let minute = parseInt(timeParts[1]) || 0;
+
+                if (hour < 8) {
+                    hour = 8;
+                }
+                if (hour > 18) {
+                    hour = 18;
+                }
+
+                const cellId = `cell-${r.day}-${hour}`;
+                const cell = document.getElementById(cellId);
+
+                if (cell) {
+                    let bgColor = r.color || '#64748b';
+                    let textColor = getContrastYIQ(bgColor);
+                    let durationMins = parseInt(r.duration) || 60;
+
+                    let topOffset = minute * 1.5;
+                    let heightPx = durationMins * 1.5;
+
+                    cell.innerHTML += `
+                    <div class="tt-event" onclick="event.stopPropagation(); openEditRoutineModal(${index})" style="background-color: ${bgColor}; color: ${textColor}; position: absolute; top: ${topOffset + 2}px; left: 2px; width: calc(100% - 4px); height: calc(${heightPx}px - 4px); z-index: 10;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <span style="color: ${textColor}">${r.name}</span>
+                            <button onclick="event.stopPropagation(); delRoutine(${index})" class="del-btn" style="color: ${textColor}"><i class="fas fa-times"></i></button>
+                        </div>
+                        <span style="font-size:0.65rem; opacity:0.9; color: ${textColor}; white-space: normal; overflow-wrap: break-word;">${r.room ? r.room + ' | ' : ''}${r.prof || ''}</span>
+                    </div>`;
+                }
+            });
+        }
+
+        function openRoutineModalWithTime(dayIndex, hour) {
+            document.getElementById('routineDay').value = dayIndex;
+            document.getElementById('routineTime').value = hour.toString().padStart(2, '0') + ':00';
+            openRoutineModal();
+        }
+
+        function openRoutineModal() {
+            const select = document.getElementById('routineSubjectSelect');
+            select.innerHTML = '<option value="" disabled selected>Select a Course</option>';
+
+            appData.subjects.forEach(s => {
+                select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+
+            select.innerHTML += `<option value="Other">Other (Custom Activity)</option>`;
+
+            onSubjectSelect();
+            openModal('routineModal');
+        }
+
+        function onSubjectSelect() {
+            const val = document.getElementById('routineSubjectSelect').value;
+            const display = document.getElementById('routineInjectedData');
+            const subject = appData.subjects.find(s => s.name === val);
+
+            if (subject && (subject.prof || subject.room || subject.duration)) {
+                display.innerHTML = `Auto-filling: ${subject.prof || 'No Prof'} | Room: ${subject.room || 'No Room'} | Duration: ${subject.duration || 60} min(s)`;
+                display.classList.remove('hidden');
+            }
+            else {
+                display.classList.add('hidden');
+            }
+
+            toggleRoutineNameInput();
+        }
+
+        function toggleRoutineNameInput() {
+            const val = document.getElementById('routineSubjectSelect').value;
+            const input = document.getElementById('routineNameCustom');
+
+            if (val === "Other") {
+                input.classList.remove('hidden');
+            }
+            else {
+                input.classList.add('hidden');
+            }
+        }
+
+        function addRoutine() {
+            const day = document.getElementById('routineDay').value;
+            const time = document.getElementById('routineTime').value;
+            const type = document.getElementById('routineType').value;
+
+            let name = document.getElementById('routineSubjectSelect').value;
+            let prof = "";
+            let room = "";
+            let color = "#64748b";
+            let duration = 60;
+
+            if (name === "Other") {
+                name = document.getElementById('routineNameCustom').value;
+            }
+            else {
+                const subject = appData.subjects.find(s => s.name === name);
+                if (subject) {
+                    prof = subject.prof;
+                    room = subject.room;
+                    color = subject.color;
+                    duration = subject.duration || 60;
+                }
+            }
+
+            if (type === "Self-Study") {
+                prof = "";
+                room = "";
+            }
+
+            if (!name || !time || name === "") {
+                return alert("Please select a course or enter a name, and choose a time.");
+            }
+
+            appData.routine.push({ day, time, name, type, prof, room, color, duration });
+
+            closeModal('routineModal');
+            saveData();
+
+            document.getElementById('routineNameCustom').value = '';
+        }
+
+        function openEditRoutineModal(index) {
+            const r = appData.routine[index];
+            document.getElementById('editRoutineIndex').value = index;
+
+            document.getElementById('editRoutineDay').value = r.day;
+            document.getElementById('editRoutineTime').value = r.time;
+
+            const select = document.getElementById('editRoutineSubjectSelect');
+            select.innerHTML = '<option value="" disabled>Select a Course</option>';
+
+            appData.subjects.forEach(s => {
+                select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+
+            select.innerHTML += `<option value="Other">Other (Custom Activity)</option>`;
+
+            if (appData.subjects.some(s => s.name === r.name)) {
+                select.value = r.name;
+            }
+            else {
+                select.value = 'Other';
+            }
+
+            document.getElementById('editRoutineNameCustom').value = r.name;
+            document.getElementById('editRoutineType').value = r.type || 'Class';
+
+            onEditRoutineSubjectSelect();
+            openModal('editRoutineModal');
+        }
+
+        function onEditRoutineSubjectSelect() {
+            const val = document.getElementById('editRoutineSubjectSelect').value;
+            const display = document.getElementById('editRoutineInjectedData');
+            const subject = appData.subjects.find(s => s.name === val);
+
+            if (subject && (subject.prof || subject.room || subject.duration)) {
+                display.innerHTML = `Auto-filling: ${subject.prof || 'No Prof'} | Room: ${subject.room || 'No Room'} | Duration: ${subject.duration || 60} min(s)`;
+                display.classList.remove('hidden');
+            }
+            else {
+                display.classList.add('hidden');
+            }
+
+            const input = document.getElementById('editRoutineNameCustom');
+
+            if (val === "Other") {
+                input.classList.remove('hidden');
+            }
+            else {
+                input.classList.add('hidden');
+            }
+        }
+
+        function saveEditRoutine() {
+            const index = document.getElementById('editRoutineIndex').value;
+            const day = document.getElementById('editRoutineDay').value;
+            const time = document.getElementById('editRoutineTime').value;
+            const type = document.getElementById('editRoutineType').value;
+
+            let name = document.getElementById('editRoutineSubjectSelect').value;
+            let prof = "";
+            let room = "";
+            let color = "#64748b";
+            let duration = 60;
+
+            if (name === "Other") {
+                name = document.getElementById('editRoutineNameCustom').value;
+            }
+            else {
+                const subject = appData.subjects.find(s => s.name === name);
+                if (subject) {
+                    prof = subject.prof;
+                    room = subject.room;
+                    color = subject.color;
+                    duration = subject.duration || 60;
+                }
+            }
+
+            if (type === "Self-Study") {
+                prof = "";
+                room = "";
+            }
+
+            if (!name || !time || name === "") {
+                return alert("Please select a course or enter a name, and choose a time.");
+            }
+
+            appData.routine[index] = { day, time, name, type, prof, room, color, duration };
+
+            closeModal('editRoutineModal');
+            saveData();
+        }
+
+        /* ── 3-Option Calendar Date Click Menu ── */
+        function openDayActionModal(dateStr) {
+            document.getElementById('selectedCalendarDate').value = dateStr;
+            document.getElementById('dayActionDateTitle').innerText = formatDateCustom(dateStr);
+            renderDayActionExisting(dateStr);
+            openModal('dayActionModal');
+        }
+
+        function chooseDayAction(actionType) {
+            const dateStr = document.getElementById('selectedCalendarDate').value;
+            closeModal('dayActionModal');
+
+            if (actionType === 'holiday') {
+                openHolidayModal('single', dateStr);
+            }
+            else if (actionType === 'exam') {
+                openTaskModal('Exam', dateStr);
+            }
+            else if (actionType === 'task') {
+                openTaskModal('Assignment', dateStr);
+            }
+        }
+
+        function renderDayActionExisting(dateStr) {
+            const section = document.getElementById('dayActionExistingSection');
+            const listEl = document.getElementById('dayActionExistingList');
+            const dayHoliday = getHolidayForDate(dateStr);
+            const dayTasks = [];
+            (appData.tasks || []).forEach((t, idx) => {
+                if (t.date === dateStr) {
+                    dayTasks.push({ task: t, index: idx });
+                }
+            });
+
+            if (!dayHoliday && dayTasks.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            listEl.innerHTML = '';
+
+            if (dayHoliday) {
+                const holLabel = getHolidayDisplayName(dayHoliday);
+                listEl.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-radius:10px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.35);">
+                    <div>
+                        <div style="font-weight:800; font-size:0.85rem; color:var(--holiday-blue);"><i class="fas fa-umbrella-beach"></i> ${holLabel}</div>
+                        <div style="font-size:0.74rem; color:var(--text-muted);">Holiday / Day Off</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="closeModal('dayActionModal'); openHolidayModal('single', '${dateStr}')" class="btn" style="padding:4px 8px; font-size:0.75rem;" title="Edit Holiday"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteHoliday('${dayHoliday.id}'); renderDayActionExisting('${dateStr}')" class="btn" style="padding:4px 8px; font-size:0.75rem; color:var(--danger-red);" title="Remove Holiday"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }
+
+            dayTasks.forEach(({ task, index }) => {
+                const isExam = task.type === 'Exam';
+                const accentCol = isExam ? 'var(--exam-red)' : 'var(--primary)';
+                const subMeta = [task.type, task.subject, task.time ? formatTimeAMPM(task.time) : '', task.room].filter(Boolean).join(' • ');
+
+                listEl.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-radius:10px; background:var(--input-bg, var(--bg)); border:1px solid var(--border);">
+                    <div>
+                        <div style="font-weight:800; font-size:0.85rem; color:${accentCol};">${task.title}</div>
+                        <div style="font-size:0.74rem; color:var(--text-muted);">${subMeta}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="closeModal('dayActionModal'); openEditTaskModal(${index})" class="btn" style="padding:4px 8px; font-size:0.75rem;" title="Edit"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteTask(${index})" class="btn" style="padding:4px 8px; font-size:0.75rem; color:var(--danger-red);" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        /* ── Holiday & Days Off Management ── */
+        function setHolidayMode(mode) {
+            holidayMode = mode === 'range' ? 'range' : 'single';
+            const btnSingle = document.getElementById('modeBtnSingle');
+            const btnRange = document.getElementById('modeBtnRange');
+            const endWrap = document.getElementById('holidayEndWrap');
+            const startLabel = document.getElementById('holidayStartLabel');
+
+            if (holidayMode === 'range') {
+                btnSingle.classList.remove('active');
+                btnRange.classList.add('active');
+                endWrap.classList.remove('hidden');
+                startLabel.innerText = 'Start Date';
+            }
+            else {
+                btnRange.classList.remove('active');
+                btnSingle.classList.add('active');
+                endWrap.classList.add('hidden');
+                startLabel.innerText = 'Date';
+            }
+        }
+
+        function resetHolidayForm() {
+            document.getElementById('editHolidayId').value = '';
+            document.getElementById('holidayName').value = '';
+            document.getElementById('holidayStartDate').value = '';
+            document.getElementById('holidayEndDate').value = '';
+            document.getElementById('saveHolidayBtn').innerText = 'Save Holiday';
+            setHolidayMode('single');
+        }
+
+        function openHolidayModal(defaultMode = 'single', prefillDate = '') {
+            resetHolidayForm();
+            setHolidayMode(defaultMode);
+
+            if (prefillDate) {
+                const existing = getHolidayForDate(prefillDate);
+                if (existing) {
+                    populateHolidayEdit(existing.id);
+                }
+                else {
+                    document.getElementById('holidayStartDate').value = prefillDate;
+                    document.getElementById('holidayEndDate').value = prefillDate;
+                }
+            }
+
+            renderHolidaysManageList();
+            openModal('holidayModal');
+        }
+
+        function populateHolidayEdit(holidayId) {
+            const hol = (appData.holidays || []).find(h => h.id === holidayId);
+            if (!hol) {
+                return;
+            }
+            document.getElementById('editHolidayId').value = hol.id;
+            document.getElementById('holidayName').value = hol.name || '';
+            document.getElementById('holidayStartDate').value = hol.startDate;
+            document.getElementById('holidayEndDate').value = hol.endDate || hol.startDate;
+
+            if (hol.endDate && hol.endDate !== hol.startDate) {
+                setHolidayMode('range');
+            }
+            else {
+                setHolidayMode('single');
+            }
+
+            document.getElementById('saveHolidayBtn').innerText = 'Update Holiday';
+        }
+
+        function saveHoliday() {
+            const editId = document.getElementById('editHolidayId').value;
+            const rawName = document.getElementById('holidayName').value.trim();
+            const startDate = document.getElementById('holidayStartDate').value;
+            let endDate = holidayMode === 'range'
+                ? document.getElementById('holidayEndDate').value
+                : startDate;
+
+            if (!startDate) {
+                return alert('Please select a date.');
+            }
+            if (holidayMode === 'range' && !endDate) {
+                return alert('Please select an end date for the holiday range.');
+            }
+            if (endDate < startDate) {
+                return alert('End date cannot be earlier than start date.');
+            }
+
+            const activeSem = getActiveSemester();
+            if (!Array.isArray(activeSem.holidays)) {
+                activeSem.holidays = [];
+            }
+
+            if (editId) {
+                const target = activeSem.holidays.find(h => h.id === editId);
+                if (target) {
+                    target.name = rawName;
+                    target.startDate = startDate;
+                    target.endDate = endDate;
+                }
+            }
+            else {
+                activeSem.holidays.push({
+                    id: 'hol_' + Date.now(),
+                    name: rawName,
+                    startDate: startDate,
+                    endDate: endDate
+                });
+            }
+
+            resetHolidayForm();
+            saveData();
+            renderHolidaysManageList();
+        }
+
+        function deleteHoliday(holidayId) {
+            const activeSem = getActiveSemester();
+            activeSem.holidays = (activeSem.holidays || []).filter(h => h.id !== holidayId);
+            if (document.getElementById('editHolidayId').value === holidayId) {
+                resetHolidayForm();
+            }
+            saveData();
+            renderHolidaysManageList();
+        }
+
+        function renderHolidaysManageList() {
+            const container = document.getElementById('holidays-manage-list');
+            if (!container) {
+                return;
+            }
+            const holidays = (appData.holidays || []).slice().sort((a, b) => a.startDate.localeCompare(b.startDate));
+            if (holidays.length === 0) {
+                container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); padding:8px 0;">No holidays or days off declared in this semester.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            holidays.forEach(h => {
+                const label = getHolidayDisplayName(h);
+                const isRange = h.endDate && h.endDate !== h.startDate;
+                const dateText = isRange
+                    ? `${formatDateCustom(h.startDate)} &rarr; ${formatDateCustom(h.endDate)}`
+                    : formatDateCustom(h.startDate);
+
+                container.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-radius:10px; background:var(--input-bg, var(--bg)); margin-bottom:6px; border:1px solid var(--border);">
+                    <div>
+                        <div style="font-weight:700; font-size:0.88rem; color:var(--holiday-blue);">${label}</div>
+                        <div style="font-size:0.76rem; color:var(--text-muted);">${dateText}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="populateHolidayEdit('${h.id}')" class="btn" style="padding:4px 8px; font-size:0.75rem;" title="Edit"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteHoliday('${h.id}')" class="btn" style="padding:4px 8px; font-size:0.75rem; color:var(--danger-red);" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function changeMonth(dir) {
+            currentMonth += dir;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const now = new Date();
+            const activeSem = getActiveSemester();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('calendar-month-year').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const semInfoEl = document.getElementById('calendar-sem-info');
+            if (semInfoEl) {
+                const holCount = (activeSem.holidays || []).length;
+                const examCount = (activeSem.tasks || []).filter(t => t.type === 'Exam').length;
+
+                const holPill = holCount > 0
+                    ? `&nbsp;•&nbsp; <span class="badge badge-holiday" onclick="openHolidayModal('single')" title="Manage Holidays">${holCount} ${holCount === 1 ? 'Holiday' : 'Holidays'}</span>`
+                    : '';
+                const examPill = examCount > 0
+                    ? `&nbsp;•&nbsp; <span class="badge badge-exam" onclick="showTab('tasks')" title="View Exams">${examCount} ${examCount === 1 ? 'Exam' : 'Exams'}</span>`
+                    : '';
+
+                if (activeSem.startDate || activeSem.endDate) {
+                    const startTxt = activeSem.startDate ? formatDateCustom(activeSem.startDate) : 'Not Set';
+                    const endTxt = activeSem.endDate ? formatDateCustom(activeSem.endDate) : 'Not Set';
+                    semInfoEl.innerHTML = `<span class="badge badge-green" style="margin-right:6px;">${activeSem.name}</span> ${startTxt} &rarr; ${endTxt} ${holPill}${examPill}`;
+                }
+                else {
+                    semInfoEl.innerHTML = `<span class="badge badge-gray">${activeSem.name}</span> No semester start/end dates set ${holPill}${examPill}`;
+                }
+            }
+
+            let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const grid = document.getElementById('calendar-body');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < firstDay; i++) {
+                grid.innerHTML += `<div></div>`;
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+                let currentDayOfWeek = (firstDay + d - 1) % 7;
+                let isWeekend = currentDayOfWeek >= 5;
+                const isToday = d === now.getDate() && currentMonth === now.getMonth() && currentYear === now.getFullYear();
+
+                const isSemStart = activeSem.startDate && dateStr === activeSem.startDate;
+                const isSemEnd = activeSem.endDate && dateStr === activeSem.endDate;
+                const isInSemRange = activeSem.startDate && activeSem.endDate && dateStr >= activeSem.startDate && dateStr <= activeSem.endDate;
+
+                const dayExams = getExamsForDate(dateStr);
+                const hasExam = dayExams.length > 0;
+                const dayHoliday = getHolidayForDate(dateStr);
+
+                let semMarkersHtml = '';
+                if (isSemStart) {
+                    semMarkersHtml += `<div class="sem-cal-badge sem-cal-start"><i class="fas fa-play"></i> Sem Start</div>`;
+                }
+                if (isSemEnd) {
+                    semMarkersHtml += `<div class="sem-cal-badge sem-cal-end"><i class="fas fa-flag-checkered"></i> Sem End</div>`;
+                }
+
+                // Exam theme overrides holiday theme on calendar cells
+                if (hasExam) {
+                    dayExams.forEach(({ task, index }) => {
+                        const timePrefix = task.time ? `${formatTimeAMPM(task.time)} ` : '';
+                        semMarkersHtml += `
+                        <div class="sem-cal-badge sem-cal-exam" onclick="event.stopPropagation(); openEditTaskModal(${index})" title="Click to edit Exam: ${task.title}">
+                            <i class="fas fa-file-signature"></i> ${timePrefix}${task.title}
+                        </div>`;
+                    });
+                }
+                else if (dayHoliday) {
+                    const holLabel = getHolidayDisplayName(dayHoliday);
+                    semMarkersHtml += `<div class="sem-cal-badge sem-cal-holiday" title="${holLabel}"><i class="fas fa-umbrella-beach"></i> ${holLabel}</div>`;
+                }
+
+                let tasksHtml = '';
+                const dayNonExamTasks = appData.tasks.filter(t => t.date === dateStr && t.type !== 'Exam');
+                dayNonExamTasks.forEach(t => {
+                    const tIndex = appData.tasks.indexOf(t);
+                    let subj = appData.subjects.find(s => s.name === t.subject);
+                    let bgColor = subj && subj.color ? subj.color : 'var(--primary)';
+                    let textColor = getContrastYIQ(bgColor);
+                    tasksHtml += `<div onclick="event.stopPropagation(); openEditTaskModal(${tIndex})" style="background-color: ${bgColor}; color: ${textColor}; font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; margin-top: 4px; max-width: 100%; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;">${t.title}</div>`;
+                });
+
+                let classes = "cal-day";
+                if (isToday) {
+                    classes += " today";
+                }
+                if (isWeekend) {
+                    classes += " weekend";
+                }
+                if (isInSemRange) {
+                    classes += " in-semester";
+                }
+                if (isSemStart) {
+                    classes += " sem-start-day";
+                }
+                if (isSemEnd) {
+                    classes += " sem-end-day";
+                }
+                if (hasExam) {
+                    classes += " exam-day";
+                }
+                else if (dayHoliday) {
+                    classes += " holiday-day";
+                }
+
+                grid.innerHTML += `
+                <div class="${classes}" onclick="openDayActionModal('${dateStr}')" title="Click to set up Day Off, Exam, or Assignment for ${formatDateCustom(dateStr)}">
+                    <div style="margin-bottom: 2px; ${hasExam ? 'color:var(--exam-red); font-weight:800;' : ''}">${d}</div>
+                    ${semMarkersHtml}
+                    ${tasksHtml}
+                </div>`;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }
+
+        function setTimer(minutes) {
+            if (isTimerRunning) {
+                pauseTimer();
+            }
+            timerDuration = minutes * 60;
+            timeLeft = timerDuration;
+            updateTimerDisplay();
+        }
+
+        function setCustomTimer() {
+            const mins = parseInt(document.getElementById('customTime').value);
+            if (mins && mins > 0) {
+                setTimer(mins);
+                document.getElementById('customTime').value = '';
+            }
+        }
+
+        function startTimer() {
+            if (isTimerRunning) {
+                return;
+            }
+            if (timeLeft === 0) {
+                timeLeft = timerDuration;
+            }
+
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }
+                else {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    if (Notification.permission === "granted") {
+                        new Notification("Study Flow Timer", { body: "Time is up! Great focus." });
+                    }
+                    alert("Session completed!");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timeLeft = timerDuration;
+            updateTimerDisplay();
+        }
+
+        function renderSettings() {
+            const currentAccent = (appData.settings.accentColor || '#dc2626').toLowerCase();
+            const presetsEl = document.getElementById('accent-presets');
+            const customPicker = document.getElementById('customAccentPicker');
+
+            if (customPicker) {
+                customPicker.value = currentAccent;
+            }
+
+            if (presetsEl) {
+                presetsEl.innerHTML = '';
+                ACCENT_PRESETS.forEach(p => {
+                    const isActive = p.color.toLowerCase() === currentAccent;
+                    presetsEl.innerHTML += `
+                    <button type="button" class="accent-swatch ${isActive ? 'active' : ''}"
+                        style="background:${p.color};"
+                        onclick="setAccentColor('${p.color}')"
+                        title="${p.name}">
+                        ${isActive ? '<i class="fas fa-check"></i>' : ''}
+                    </button>`;
+                });
+            }
+
+            document.getElementById('syncId').value = appData.settings.syncId || '';
+            const statusEl = document.getElementById('sync-status');
+
+            if (appData.settings.lastSync) {
+                statusEl.innerHTML = `<i class="fas fa-check-circle text-green"></i> Last synced: ${appData.settings.lastSync}`;
+            }
+            else {
+                statusEl.innerHTML = `No data synced yet.`;
+            }
+
+            const semList = document.getElementById('semesters-list');
+            if (!semList) {
+                return;
+            }
+            semList.innerHTML = '';
+
+            appData.semesters.forEach(sem => {
+                const isActive = sem.id === appData.currentSemesterId;
+                let dateRangeText = 'No dates set';
+                if (sem.startDate || sem.endDate) {
+                    const sTxt = sem.startDate ? formatDateCustom(sem.startDate) : 'Unset';
+                    const eTxt = sem.endDate ? formatDateCustom(sem.endDate) : 'Unset';
+                    dateRangeText = `${sTxt} &rarr; ${eTxt}`;
+                }
+
+                semList.innerHTML += `
+                <div class="list-item" style="flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-weight:700; font-size:1rem;">${sem.name}</span>
+                            ${isActive ? '<span class="badge badge-green">Active</span>' : ''}
+                        </div>
+                        <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
+                            <i class="fas fa-calendar-alt"></i> ${dateRangeText}
+                            &nbsp;•&nbsp; ${sem.subjects.length} Courses
+                            &nbsp;•&nbsp; ${sem.tasks.length} Tasks/Exams
+                            &nbsp;•&nbsp; ${(sem.holidays || []).length} Holidays
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        ${!isActive ? `<button onclick="switchSemester('${sem.id}')" class="btn" style="padding:6px 14px; font-size:0.82rem;">Switch</button>` : ''}
+                        <button onclick="openEditSemesterModal('${sem.id}')" class="btn" style="padding:6px 12px;" title="Edit Semester"><i class="fas fa-pen"></i></button>
+                        <button onclick="deleteSemester('${sem.id}')" class="btn" style="padding:6px 12px; color:var(--danger-red);" title="Delete Semester"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+            });
+        }
+
+        function simulateSync() {
+            const id = document.getElementById('syncId').value;
+            if (!id) {
+                return alert("Please enter a Sync ID to connect your devices.");
+            }
+
+            const btn = document.getElementById('sync-btn');
+            const status = document.getElementById('sync-status');
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                appData.settings.syncId = id;
+                appData.settings.lastSync = new Date().toLocaleString();
+                saveData();
+
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync Now';
+                btn.disabled = false;
+                status.innerHTML = `<i class="fas fa-check-circle text-green"></i> Last synced: ${appData.settings.lastSync}`;
+            }, 1500);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+            document.getElementById(id).style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById(id).style.opacity = '1';
+            }, 10);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById(id).classList.remove('open');
+                document.getElementById(id).style.display = 'none';
+            }, 300);
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const dlAnchor = document.createElement('a');
+
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const nn = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "StudyFlow_backup_" + yyyy + "-" + mm + "-" + dd + "-" + hh + nn + ss + ".json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!parsed || typeof parsed !== 'object') {
+                        throw new Error('Invalid JSON structure');
+                    }
+                    pendingImportData = parsed;
+                    const normalizedPreview = normalizeAppData(parsed);
+                    const semCount = normalizedPreview.semesters.length;
+                    document.getElementById('importSummaryText').innerHTML =
+                        `Found <b>${semCount} semester(s)</b> in <b>${file.name}</b>.<br>Would you like to merge this data with your existing semesters or replace all existing data?`;
+                    openModal('importModal');
+                }
+                catch (err) {
+                    alert('Invalid file format');
+                }
+                finally {
+                    input.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function mergeSemesterArrays(targetSem, sourceSem) {
+            if (!targetSem.startDate && sourceSem.startDate) {
+                targetSem.startDate = sourceSem.startDate;
+            }
+            if (!targetSem.endDate && sourceSem.endDate) {
+                targetSem.endDate = sourceSem.endDate;
+            }
+
+            (sourceSem.subjects || []).forEach(sub => {
+                const existing = targetSem.subjects.find(
+                    s => s.name.toLowerCase() === (sub.name || '').toLowerCase()
+                );
+                if (!existing) {
+                    targetSem.subjects.push(sub);
+                }
+            });
+
+            (sourceSem.tasks || []).forEach(task => {
+                const exists = targetSem.tasks.some(
+                    t => t.title === task.title && (t.date || '') === (task.date || '') && t.type === task.type
+                );
+                if (!exists) {
+                    targetSem.tasks.push(task);
+                }
+            });
+
+            (sourceSem.routine || []).forEach(rt => {
+                const exists = targetSem.routine.some(
+                    r => String(r.day) === String(rt.day) && r.time === rt.time && r.name === rt.name
+                );
+                if (!exists) {
+                    targetSem.routine.push(rt);
+                }
+            });
+
+            if (!Array.isArray(targetSem.holidays)) {
+                targetSem.holidays = [];
+            }
+            (sourceSem.holidays || []).forEach(hol => {
+                const exists = targetSem.holidays.some(
+                    h => h.startDate === hol.startDate && (h.endDate || h.startDate) === (hol.endDate || hol.startDate)
+                );
+                if (!exists) {
+                    targetSem.holidays.push(hol);
+                }
+            });
+        }
+
+        function confirmImport(mode) {
+            if (!pendingImportData) {
+                return closeModal('importModal');
+            }
+
+            if (mode === 'replace') {
+                appData = normalizeAppData(pendingImportData);
+                bindActiveSemesterProxies(appData);
+                if (appData.settings.darkMode) {
+                    document.body.classList.add('dark-mode');
+                }
+                else {
+                    document.body.classList.remove('dark-mode');
+                }
+                applyAccentColor(appData.settings.accentColor || '#dc2626');
+                pendingImportData = null;
+                closeModal('importModal');
+                saveData();
+                alert('Data replaced successfully!');
+            }
+            else if (mode === 'merge') {
+                const isLegacyFlat = !Array.isArray(pendingImportData.semesters);
+                if (isLegacyFlat) {
+                    const activeSem = getActiveSemester();
+                    mergeSemesterArrays(activeSem, {
+                        startDate: '',
+                        endDate: '',
+                        tasks: Array.isArray(pendingImportData.tasks) ? pendingImportData.tasks : [],
+                        subjects: Array.isArray(pendingImportData.subjects) ? pendingImportData.subjects : [],
+                        routine: Array.isArray(pendingImportData.routine) ? pendingImportData.routine : [],
+                        holidays: Array.isArray(pendingImportData.holidays) ? pendingImportData.holidays : []
+                    });
+                }
+                else {
+                    const incomingNormalized = normalizeAppData(pendingImportData);
+                    incomingNormalized.semesters.forEach(incSem => {
+                        const match = appData.semesters.find(
+                            s => s.id === incSem.id || s.name.toLowerCase() === incSem.name.toLowerCase()
+                        );
+                        if (match) {
+                            mergeSemesterArrays(match, incSem);
+                        }
+                        else {
+                            appData.semesters.push(incSem);
+                        }
+                    });
+                }
+
+                pendingImportData = null;
+                closeModal('importModal');
+                saveData();
+                alert('Data merged successfully!');
+            }
+        }
+
+        function cancelImport() {
+            pendingImportData = null;
+            closeModal('importModal');
+        }
+
+        function clearData() {
+            if (confirm("Are you sure you want to wipe ALL semesters and settings? This cannot be undone.")) {
+                localStorage.removeItem('studyFlowData');
+                location.reload();
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                alert("Browser does not support notifications");
+            }
+            else {
+                Notification.requestPermission().then(p => {
+                    if (p === "granted") {
+                        new Notification("Study Flow", { body: "Notifications are successfully enabled!" });
+                    }
+                });
+            }
+        }
+
+        function checkReminders() {
+            if (Notification.permission === "granted") {
+                const today = getLocalDateStr();
+                const todayExams = appData.tasks.filter(t => t.date === today && t.type === 'Exam' && !t.completed);
+                const dueTasks = appData.tasks.filter(t => t.date === today && t.type !== 'Exam' && !t.completed);
+
+                if (todayExams.length > 0) {
+                    new Notification("Study Flow Exam Alert", {
+                        body: `You have ${todayExams.length} exam(s) scheduled today: ${todayExams.map(e => e.title).join(', ')}`
+                    });
+                }
+                if (dueTasks.length > 0) {
+                    new Notification("Study Flow Deadlines", {
+                        body: `Reminder: You have ${dueTasks.length} task(s) due today!`
+                    });
+                }
+            }
+        }
+
+        function startNotificationEngine() {
+            setInterval(() => {
+                if (Notification.permission !== "granted") {
+                    return;
+                }
+
+                const now = new Date();
+                const todayStr = getLocalDateStr(now);
+                const todayExams = getExamsForDate(todayStr).filter(e => !e.task.completed);
+
+                // If exams exist today, send 15-min exam reminders and suppress regular class notifications
+                if (todayExams.length > 0) {
+                    todayExams.forEach(({ task }) => {
+                        if (task.time) {
+                            let examTime = new Date(now.toDateString() + " " + task.time);
+                            let diffMins = Math.round((examTime - now) / 60000);
+                            if (diffMins === 15) {
+                                new Notification("Upcoming Exam", {
+                                    body: `Exam "${task.title}" starts in 15 minutes at ${formatTimeAMPM(task.time)}${task.room ? ' (' + task.room + ')' : ''}.`
+                                });
+                            }
+                        }
+                    });
+                    return;
+                }
+
+                // Suppress regular class notifications on declared holidays / days off
+                if (getHolidayForDate(todayStr)) {
+                    return;
+                }
+
+                const currentDay = now.getDay();
+
+                appData.routine.forEach(r => {
+                    if (parseInt(r.day) === currentDay) {
+                        let routineTime = new Date(now.toDateString() + " " + r.time);
+                        let diffMs = routineTime - now;
+                        let diffMins = Math.round(diffMs / 60000);
+
+                        if (diffMins === 15) {
+                            new Notification("Upcoming Class/Study Session", {
+                                body: `Your session "${r.name}" is starting in 15 minutes at ${r.time}.`
+                            });
+                        }
+                    }
+                });
+            }, 60000);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
